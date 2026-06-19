@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Select Company</title>
+
+
+  <style>
+     :root {
+      --bg: #eef4ff;
+      --bg-2: #f9fbff;
+      --surface: rgba(255, 255, 255, 0.6);
+      --surface-strong: rgba(255, 255, 255, 0.8);
+      --text: #10203b;
+      --muted: #5e6b84;
+      --border: rgba(70, 92, 140, 0.16);
+      --primary: #2d6bff;
+      --primary-2: #6b4dff;
+      --accent: #8e69ff;
+      --shadow: 0 24px 60px rgba(24, 43, 86, 0.14);
+      --shadow-hover: 0 30px 70px rgba(24, 43, 86, 0.2);
+      --radius-xl: 32px;
+      --radius-lg: 24px;
+      --radius-md: 18px;
+    }
+
+    [data-theme="dark"] {
+      --bg: #08111f;
+      --bg-2: #111c32;
+      --surface: rgba(12, 20, 38, 0.62);
+      --surface-strong: rgba(15, 25, 45, 0.84);
+      --text: #f3f7ff;
+      --muted: #aab7d0;
+      --border: rgba(168, 190, 255, 0.14);
+      --shadow: 0 24px 60px rgba(0, 0, 0, 0.34);
+      --shadow-hover: 0 30px 70px rgba(0, 0, 0, 0.42);
+    }
+    
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+height: 98vh;
+display:flex;
+justify-content:center;
+align-items:center;
+margin-left:2px;
+
+
+background:linear-gradient(135deg,#dce6ff,#ece5ff);
+}
+
+.container{
+
+width:900px;
+padding:40px;
+
+background:rgba(255,255,255,0.45);
+
+border-radius:30px;
+
+box-shadow:0 8px 25px rgba(0,0,0,0.1);
+
+text-align:center;
+}
+
+h1{
+font-size:48px;
+color:#0f2344;
+margin-bottom:15px;
+}
+
+p{
+font-size:22px;
+color:#5d6b89;
+margin-bottom:40px;
+}
+
+.company-boxes{
+
+display:grid;
+
+grid-template-columns:repeat(3,1fr);
+
+gap:25px;
+}
+
+.company{
+
+height:160px;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+font-size:28px;
+
+font-weight:bold;
+
+border-radius:20px;
+
+cursor:pointer;
+
+transition:0.3s;
+
+color:white;
+
+background:linear-gradient(135deg,#3b82f6,#6d28d9);
+}
+
+.company:hover{
+
+transform:translateY(-8px);
+
+box-shadow:0 10px 20px rgba(0,0,0,0.2);
+
+}
+
+.back-btn{
+
+margin-top:35px;
+
+padding:15px 35px;
+
+border:none;
+
+border-radius:15px;
+
+font-size:20px;
+
+font-weight:bold;
+
+cursor:pointer;
+
+color:white;
+
+background:#2563eb;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Select Company</h1>
+
+<p>Choose a company to start your interview preparation</p>
+
+<div class="company-boxes">
+
+<div class="company" onclick="goToInterview()">TCS</div>
+
+<div class="company" onclick="goToInterview()">Infosys</div>
+
+<div class="company" onclick="goToInterview()">Wipro</div>
+
+<div class="company" onclick="goToInterview()">Accenture</div>
+
+<div class="company" onclick="goToInterview()">Capgemini</div>
+
+<div class="company" onclick="goToInterview()">Cognizant</div>
+
+</div>
+
+<button class="back-btn" onclick="history.back()">
+
+Back
+
+</button>
+
+</div>
+<script>
+function goToInterview() {
+    window.location.href = "interview.html";
+}
+</script>
+
+</body>
+
+</html>

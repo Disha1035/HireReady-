@@ -1,0 +1,896 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HireReady AI | Coding Assessment</title>
+  <style>
+    :root {
+      --bg-start: #0f1748;
+      --bg-end: #3f4fc8;
+      --card: rgba(255, 255, 255, 0.08);
+      --card-strong: rgba(255, 255, 255, 0.12);
+      --text: #eef2ff;
+      --muted: #bfc8ff;
+      --accent: #7c5cff;
+      --success: #45d6a7;
+      --warning: #ffd369;
+      --danger: #ff6b8a;
+      font-family: Inter, system-ui, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: radial-gradient(circle at top left, rgba(110, 91, 255, 0.24), transparent 25%),
+        linear-gradient(135deg, var(--bg-start), var(--bg-end));
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .page-shell {
+      width: min(1200px, 100%);
+      display: grid;
+      gap: 24px;
+    }
+
+    .header-card,
+    .status-grid,
+    .question-card,
+    .result-panel {
+      background: var(--card);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 24px;
+      backdrop-filter: blur(18px);
+      box-shadow: 0 32px 80px rgba(0, 0, 0, 0.18);
+    }
+
+    .header-card {
+      padding: 28px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .header-brand {
+      display: grid;
+      gap: 10px;
+    }
+
+    .header-brand h1 {
+      margin: 0;
+      font-size: clamp(1.8rem, 2.5vw, 2.8rem);
+      letter-spacing: 0.04em;
+    }
+
+    .header-brand p {
+      margin: 0;
+      color: var(--muted);
+      max-width: 680px;
+      line-height: 1.7;
+    }
+
+    .company-badges {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .badge,
+    .company-btn {
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text);
+      font-size: 0.92rem;
+      cursor: pointer;
+      transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+    }
+
+    .company-btn:hover,
+    .company-btn.selected {
+      background: linear-gradient(135deg, #6366f1, #38bdf8);
+      border-color: rgba(255, 255, 255, 0.24);
+      color: #fff;
+      transform: translateY(-1px);
+    }
+
+    .current-company {
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .status-grid {
+      padding: 24px 26px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 20px;
+    }
+
+    .status-card {
+      padding: 20px 22px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .status-card p {
+      margin: 0 0 10px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .status-card h2,
+    .status-card span {
+      margin: 0;
+      font-size: 1.7rem;
+      letter-spacing: -0.02em;
+    }
+
+    .progress-wrap {
+      display: grid;
+      gap: 10px;
+    }
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.95rem;
+      color: var(--muted);
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 12px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, #6366f1, #38bdf8);
+      transition: width 0.35s ease;
+    }
+
+    .question-card {
+      padding: 28px 30px;
+      display: grid;
+      gap: 24px;
+    }
+
+    .question-title {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .question-info {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .pill {
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: var(--text);
+      font-size: 0.92rem;
+      font-weight: 600;
+    }
+
+    .problem {
+      display: grid;
+      gap: 18px;
+    }
+
+    .problem h2 {
+      margin: 0;
+      font-size: 1.4rem;
+    }
+
+    .problem p,
+    .example p,
+    .constraints p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.75;
+      font-size: 1rem;
+    }
+
+    .statement,
+    .example,
+    .constraints {
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 18px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .statement strong,
+    .example strong,
+    .constraints strong {
+      color: var(--text);
+    }
+
+    .code-area {
+      display: grid;
+      gap: 14px;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 280px;
+      resize: vertical;
+      border-radius: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(10, 18, 61, 0.9);
+      color: #eef2ff;
+      padding: 18px;
+      font-family: Consolas, Monaco, 'Courier New', monospace;
+      font-size: 0.96rem;
+      line-height: 1.55;
+    }
+
+    .action-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      align-items: center;
+    }
+
+    .action-row button {
+      border: none;
+      border-radius: 16px;
+      padding: 16px 20px;
+      font-size: 1rem;
+      cursor: pointer;
+      font-weight: 600;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+
+    .action-row button:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #7c5cff, #38bdf8);
+      color: #fff;
+    }
+
+    .btn-submit {
+      background: linear-gradient(135deg, #22c55e, #38bdf8);
+      color: #fff;
+    }
+
+    .btn-retake {
+      background: linear-gradient(135deg, #f97316, #facc15);
+      color: #0f172a;
+    }
+
+    .result-panel {
+      padding: 28px 30px;
+      display: none;
+      gap: 22px;
+    }
+
+    .result-panel.active {
+      display: grid;
+    }
+
+    .result-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .result-title h2 {
+      margin: 0;
+      font-size: 1.75rem;
+    }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .result-card {
+      padding: 22px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      text-align: center;
+    }
+
+    .result-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .result-card span {
+      display: block;
+      margin-top: 16px;
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .analysis {
+      padding: 22px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .analysis h3 {
+      margin: 0 0 10px;
+      font-size: 1.2rem;
+    }
+
+    .analysis p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    .hint {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 960px) {
+      .status-grid,
+      .action-row,
+      .result-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .header-card {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .company-badges {
+        justify-content: flex-start;
+      }
+
+      textarea {
+        min-height: 240px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-shell">
+    <section class="header-card">
+      <div class="header-brand">
+        <h1>HireReady AI | Coding Assessment</h1>
+        <p>Practice your coding skills with a company-style assessment portal modeled for TCS, Infosys, Wipro, Accenture, Capgemini, and Cognizant.</p>
+      </div>
+      <div class="company-badges">
+        <button class="badge company-btn selected" data-company="TCS">TCS</button>
+        <button class="badge company-btn" data-company="Infosys">Infosys</button>
+        <button class="badge company-btn" data-company="Wipro">Wipro</button>
+        <button class="badge company-btn" data-company="Accenture">Accenture</button>
+        <button class="badge company-btn" data-company="Capgemini">Capgemini</button>
+        <button class="badge company-btn" data-company="Cognizant">Cognizant</button>
+      </div>
+      <div class="current-company">Company: <strong id="selectedCompanyLabel">TCS</strong></div>
+    </section>
+
+    <section class="status-grid">
+      <div class="status-card">
+        <p>Time Remaining</p>
+        <h2 id="timer">30:00</h2>
+      </div>
+      <div class="status-card">
+        <p>Question Progress</p>
+        <div class="progress-wrap">
+          <div class="progress-label">
+            <span id="questionLabel">Question 1/10</span>
+            <span id="progressPercent">10%</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+          </div>
+        </div>
+      </div>
+      <div class="status-card">
+        <p>Difficulty</p>
+        <h2 id="currentDifficulty">Easy</h2>
+      </div>
+    </section>
+
+    <section class="question-card">
+      <div class="question-title">
+        <div>
+          <p class="hint" id="questionType">Java Coding Challenge</p>
+          <h2 id="questionTitle">Loading challenge...</h2>
+        </div>
+        <div class="question-info">
+          <span class="pill" id="difficultyBadge">Easy</span>
+          <span class="pill" id="questionNumber">Question 1/10</span>
+        </div>
+      </div>
+
+      <div class="problem">
+        <div class="statement">
+          <strong>Problem Statement</strong>
+          <p id="statementText">Loading problem details...</p>
+        </div>
+        <div class="example">
+          <strong>Input Example</strong>
+          <p id="inputExample">-</p>
+        </div>
+        <div class="example">
+          <strong>Output Example</strong>
+          <p id="outputExample">-</p>
+        </div>
+        <div class="constraints">
+          <strong>Constraints</strong>
+          <p id="constraintsText">-</p>
+        </div>
+      </div>
+
+      <div class="code-area">
+        <strong>Write your Java code below</strong>
+        <textarea id="codeEditor" placeholder="Type your code here...">public class Solution {
+    public static void main(String[] args) {
+        
+    }
+}</textarea>
+      </div>
+
+      <div class="action-row">
+        <button class="btn-secondary" id="prevBtn">Previous</button>
+        <button class="btn-primary" id="nextBtn">Next</button>
+        <button class="btn-submit" id="submitBtn">Submit</button>
+      </div>
+    </section>
+
+    <section class="result-panel" id="resultPanel">
+      <div class="result-title">
+        <h2>Assessment Results</h2>
+        <span class="hint">Submit or let the timer expire to view performance.</span>
+      </div>
+      <div class="result-grid">
+        <div class="result-card">
+          <p>Score</p>
+          <span id="scoreText">0 / 10</span>
+        </div>
+        <div class="result-card">
+          <p>Percentage</p>
+          <span id="percentageText">0%</span>
+        </div>
+        <div class="result-card">
+          <p>Performance</p>
+          <span id="performanceText">Pending</span>
+        </div>
+      </div>
+      <div class="analysis">
+        <h3>Performance Analysis</h3>
+        <p id="analysisText">Complete the assessment to receive a detailed result and improvement summary.</p>
+      </div>
+      <button class="btn-retake" id="retakeBtn">Retake Test</button>
+    </section>
+  </div>
+
+  <script>
+    const baseQuestions = [
+      {
+        title: 'Reverse a String',
+        difficulty: 'Easy',
+        statement: 'Write a Java program to reverse a given string and print the reversed result.',
+        input: 'Input: hello',
+        output: 'Output: olleh',
+        constraints: 'String length <= 100. Use standard Java string methods or loops.',
+        keywords: ['reverse', 'StringBuilder', 'reverse()', 'charAt']
+      },
+      {
+        title: 'Palindrome Number',
+        difficulty: 'Easy',
+        statement: 'Check whether a given integer is a palindrome. Print true if it is a palindrome, otherwise false.',
+        input: 'Input: 121',
+        output: 'Output: true',
+        constraints: 'Number range: 0 <= n <= 1,000,000,000.',
+        keywords: ['palindrome', 'reverse', 'toString', 'StringBuilder', 'Math']
+      },
+      {
+        title: 'Fibonacci Series',
+        difficulty: 'Easy',
+        statement: 'Print the first N numbers in the Fibonacci series separated by spaces.',
+        input: 'Input: 7',
+        output: 'Output: 0 1 1 2 3 5 8',
+        constraints: '1 <= N <= 20. Use loops or arrays to generate the sequence.',
+        keywords: ['fibonacci', 'for', 'array', 'prev', 'next']
+      },
+      {
+        title: 'Prime Number',
+        difficulty: 'Easy',
+        statement: 'Determine whether a given integer is prime and print true or false.',
+        input: 'Input: 29',
+        output: 'Output: true',
+        constraints: '2 <= n <= 100000. Use efficient loop checks up to sqrt(n).',
+        keywords: ['prime', 'sqrt', 'for', 'if', 'break']
+      },
+      {
+        title: 'Factorial',
+        difficulty: 'Medium',
+        statement: 'Calculate the factorial of a non-negative integer N and print the result.',
+        input: 'Input: 5',
+        output: 'Output: 120',
+        constraints: '0 <= N <= 20. Use recursion or iterative multiplication.',
+        keywords: ['factorial', 'recursive', 'loop', 'long', 'multiplication']
+      },
+      {
+        title: 'Find Largest Element',
+        difficulty: 'Medium',
+        statement: 'Given an array of integers, find and print the largest element.',
+        input: 'Input: [3, 9, 1, 4]',
+        output: 'Output: 9',
+        constraints: 'Array size <= 50. Use a loop to scan for the maximum value.',
+        keywords: ['largest', 'max', 'array', 'for', 'if']
+      },
+      {
+        title: 'Count Vowels',
+        difficulty: 'Medium',
+        statement: 'Count the number of vowels in a given string and print the count.',
+        input: 'Input: Interviews',
+        output: 'Output: 4',
+        constraints: 'String length <= 100. Count both uppercase and lowercase vowels.',
+        keywords: ['vowel', 'charAt', 'equals', 'toLowerCase', 'switch']
+      },
+      {
+        title: 'Bubble Sort',
+        difficulty: 'Hard',
+        statement: 'Sort an array of integers using bubble sort and print the sorted array.',
+        input: 'Input: [5, 2, 8, 1]',
+        output: 'Output: [1, 2, 5, 8]',
+        constraints: 'Array size <= 20. Use nested loops to implement bubble sort.',
+        keywords: ['bubble', 'sort', 'swap', 'array', 'for', 'while']
+      },
+      {
+        title: 'Sum of Digits',
+        difficulty: 'Hard',
+        statement: 'Calculate and print the sum of digits of a given non-negative integer.',
+        input: 'Input: 472',
+        output: 'Output: 13',
+        constraints: '0 <= n <= 1,000,000,000. Use modulus and division operations.',
+        keywords: ['digits', 'mod', 'division', 'while', 'sum']
+      },
+      {
+        title: 'Remove Duplicates from an Array',
+        difficulty: 'Hard',
+        statement: 'Remove duplicate values from an integer array and print the unique elements.',
+        input: 'Input: [1, 2, 2, 3, 1]',
+        output: 'Output: [1, 2, 3]',
+        constraints: 'Array size <= 30. Preserve input order of first occurrences.',
+        keywords: ['duplicate', 'Set', 'ArrayList', 'contains', 'unique']
+      }
+    ];
+
+    const totalQuestions = 10;
+    const durationSeconds = 30 * 60;
+    const timerEl = document.getElementById('timer');
+    const selectedCompanyLabel = document.getElementById('selectedCompanyLabel');
+    const companyButtons = document.querySelectorAll('.company-btn');
+    const questionLabel = document.getElementById('questionLabel');
+    const progressPercent = document.getElementById('progressPercent');
+    const progressFill = document.getElementById('progressFill');
+    const currentDifficulty = document.getElementById('currentDifficulty');
+    const difficultyBadge = document.getElementById('difficultyBadge');
+    const questionTitle = document.getElementById('questionTitle');
+    const statementText = document.getElementById('statementText');
+    const inputExample = document.getElementById('inputExample');
+    const outputExample = document.getElementById('outputExample');
+    const constraintsText = document.getElementById('constraintsText');
+    const codeEditor = document.getElementById('codeEditor');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const submitBtn = document.getElementById('submitBtn');
+    const resultPanel = document.getElementById('resultPanel');
+    const scoreText = document.getElementById('scoreText');
+    const percentageText = document.getElementById('percentageText');
+    const performanceText = document.getElementById('performanceText');
+    const analysisText = document.getElementById('analysisText');
+    const retakeBtn = document.getElementById('retakeBtn');
+
+    let currentIndex = 0;
+    let shuffledQuestions = [];
+    let answers = Array(totalQuestions).fill('');
+    let timerValue = durationSeconds;
+    let submitted = false;
+    let selectedCompany = 'TCS';
+    let timerInterval;
+
+    const companyContext = {
+      TCS: 'for a TCS enterprise solution',
+      Infosys: 'for an Infosys digital services project',
+      Wipro: 'for a Wipro technology platform',
+      Accenture: 'for an Accenture consulting assignment',
+      Capgemini: 'for a Capgemini analytics workflow',
+      Cognizant: 'for a Cognizant automation solution'
+    };
+
+    const companySamples = {
+      TCS: {
+        'Reverse a String': { input: 'Input: TCSPortal', output: 'Output: latoSProT' },
+        'Palindrome Number': { input: 'Input: 1221', output: 'Output: true' },
+        'Fibonacci Series': { input: 'Input: 8', output: 'Output: 0 1 1 2 3 5 8 13' },
+        'Prime Number': { input: 'Input: 31', output: 'Output: true' },
+        'Factorial': { input: 'Input: 6', output: 'Output: 720' },
+        'Find Largest Element': { input: 'Input: [7, 2, 14, 9]', output: 'Output: 14' },
+        'Count Vowels': { input: 'Input: TCSInterview', output: 'Output: 5' },
+        'Bubble Sort': { input: 'Input: [9, 3, 7, 1]', output: 'Output: [1, 3, 7, 9]' },
+        'Sum of Digits': { input: 'Input: 385', output: 'Output: 16' },
+        'Remove Duplicates from an Array': { input: 'Input: [2, 4, 2, 5, 4]', output: 'Output: [2, 4, 5]' }
+      },
+      Infosys: {
+        'Reverse a String': { input: 'Input: InfosysCode', output: 'Output: edoCsysfonI' },
+        'Palindrome Number': { input: 'Input: 1441', output: 'Output: true' },
+        'Fibonacci Series': { input: 'Input: 6', output: 'Output: 0 1 1 2 3 5' },
+        'Prime Number': { input: 'Input: 47', output: 'Output: true' },
+        'Factorial': { input: 'Input: 4', output: 'Output: 24' },
+        'Find Largest Element': { input: 'Input: [12, 5, 19, 8]', output: 'Output: 19' },
+        'Count Vowels': { input: 'Input: InfosysHiring', output: 'Output: 6' },
+        'Bubble Sort': { input: 'Input: [6, 1, 4, 3]', output: 'Output: [1, 3, 4, 6]' },
+        'Sum of Digits': { input: 'Input: 509', output: 'Output: 14' },
+        'Remove Duplicates from an Array': { input: 'Input: [3, 3, 5, 1]', output: 'Output: [3, 5, 1]' }
+      },
+      Wipro: {
+        'Reverse a String': { input: 'Input: WiproTech', output: 'Output: hceTorp iW' },
+        'Palindrome Number': { input: 'Input: 9009', output: 'Output: true' },
+        'Fibonacci Series': { input: 'Input: 5', output: 'Output: 0 1 1 2 3' },
+        'Prime Number': { input: 'Input: 53', output: 'Output: true' },
+        'Factorial': { input: 'Input: 7', output: 'Output: 5040' },
+        'Find Largest Element': { input: 'Input: [11, 17, 5, 13]', output: 'Output: 17' },
+        'Count Vowels': { input: 'Input: WiproAI', output: 'Output: 4' },
+        'Bubble Sort': { input: 'Input: [8, 2, 10, 4]', output: 'Output: [2, 4, 8, 10]' },
+        'Sum of Digits': { input: 'Input: 726', output: 'Output: 15' },
+        'Remove Duplicates from an Array': { input: 'Input: [5, 5, 2, 8]', output: 'Output: [5, 2, 8]' }
+      },
+      Accenture: {
+        'Reverse a String': { input: 'Input: Accenture', output: 'Output: erutneccA' },
+        'Palindrome Number': { input: 'Input: 1331', output: 'Output: true' },
+        'Fibonacci Series': { input: 'Input: 9', output: 'Output: 0 1 1 2 3 5 8 13 21' },
+        'Prime Number': { input: 'Input: 71', output: 'Output: true' },
+        'Factorial': { input: 'Input: 3', output: 'Output: 6' },
+        'Find Largest Element': { input: 'Input: [4, 18, 2, 9]', output: 'Output: 18' },
+        'Count Vowels': { input: 'Input: AccentureTech', output: 'Output: 6' },
+        'Bubble Sort': { input: 'Input: [7, 5, 2, 9]', output: 'Output: [2, 5, 7, 9]' },
+        'Sum of Digits': { input: 'Input: 291', output: 'Output: 12' },
+        'Remove Duplicates from an Array': { input: 'Input: [2, 3, 2, 6]', output: 'Output: [2, 3, 6]' }
+      },
+      Capgemini: {
+        'Reverse a String': { input: 'Input: Capgemini', output: 'Output: inimegpaC' },
+        'Palindrome Number': { input: 'Input: 4554', output: 'Output: true' },
+        'Fibonacci Series': { input: 'Input: 4', output: 'Output: 0 1 1 2' },
+        'Prime Number': { input: 'Input: 89', output: 'Output: true' },
+        'Factorial': { input: 'Input: 8', output: 'Output: 40320' },
+        'Find Largest Element': { input: 'Input: [10, 16, 4, 13]', output: 'Output: 16' },
+        'Count Vowels': { input: 'Input: CapgeminiAI', output: 'Output: 6' },
+        'Bubble Sort': { input: 'Input: [3, 12, 7, 1]', output: 'Output: [1, 3, 7, 12]' },
+        'Sum of Digits': { input: 'Input: 834', output: 'Output: 15' },
+        'Remove Duplicates from an Array': { input: 'Input: [1, 2, 1, 7]', output: 'Output: [1, 2, 7]' }
+      },
+      Cognizant: {
+        'Reverse a String': { input: 'Input: Cognizant', output: 'Output: tnazigonoC' },
+        'Palindrome Number': { input: 'Input: 2112', output: 'Output: true' },
+        'Fibonacci Series': { input: 'Input: 10', output: 'Output: 0 1 1 2 3 5 8 13 21 34' },
+        'Prime Number': { input: 'Input: 97', output: 'Output: true' },
+        'Factorial': { input: 'Input: 2', output: 'Output: 2' },
+        'Find Largest Element': { input: 'Input: [9, 14, 22, 6]', output: 'Output: 22' },
+        'Count Vowels': { input: 'Input: CognizantAI', output: 'Output: 6' },
+        'Bubble Sort': { input: 'Input: [10, 3, 5, 2]', output: 'Output: [2, 3, 5, 10]' },
+        'Sum of Digits': { input: 'Input: 645', output: 'Output: 15' },
+        'Remove Duplicates from an Array': { input: 'Input: [4, 4, 2, 9]', output: 'Output: [4, 2, 9]' }
+      }
+    };
+
+    function getCompanyQuestions(company) {
+      const context = companyContext[company] || companyContext.TCS;
+      const companySample = companySamples[company] || companySamples.TCS;
+      return baseQuestions.map((question) => ({
+        ...question,
+        statement: `${question.statement} This problem is designed ${context}.`,
+        input: companySample[question.title]?.input || question.input,
+        output: companySample[question.title]?.output || question.output
+      }));
+    }
+
+    function shuffle(array) {
+      return array
+        .map((value) => ({ value, sort: Math.random() }))
+        .sort((a, b) => a.sort - b.sort)
+        .map(({ value }) => value);
+    }
+
+    function formatTime(seconds) {
+      const mins = String(Math.floor(seconds / 60)).padStart(2, '0');
+      const secs = String(seconds % 60).padStart(2, '0');
+      return `${mins}:${secs}`;
+    }
+
+    function startTimer() {
+      timerEl.textContent = formatTime(timerValue);
+      clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        timerValue -= 1;
+        timerEl.textContent = formatTime(timerValue);
+        if (timerValue <= 0) {
+          clearInterval(timerInterval);
+          if (!submitted) submitAssessment();
+        }
+      }, 1000);
+    }
+
+    function loadQuestion(index) {
+      currentIndex = index;
+      const question = shuffledQuestions[index];
+      selectedCompanyLabel.textContent = selectedCompany;
+      questionLabel.textContent = `Question ${index + 1}/${totalQuestions}`;
+      progressPercent.textContent = `${Math.round(((index + 1) / totalQuestions) * 100)}%`;
+      progressFill.style.width = `${((index + 1) / totalQuestions) * 100}%`;
+      currentDifficulty.textContent = question.difficulty;
+      difficultyBadge.textContent = question.difficulty;
+      questionTitle.textContent = question.title;
+      statementText.textContent = question.statement;
+      inputExample.textContent = question.input;
+      outputExample.textContent = question.output;
+      constraintsText.textContent = question.constraints;
+      codeEditor.value = answers[index] || `public class Solution {\n    public static void main(String[] args) {\n        // Write your Java code here\n    }\n}`;
+      prevBtn.disabled = index === 0;
+      nextBtn.textContent = index === totalQuestions - 1 ? 'Submit' : 'Next';
+    }
+
+    function saveCurrentAnswer() {
+      answers[currentIndex] = codeEditor.value.trim();
+    }
+
+    function nextQuestion() {
+      saveCurrentAnswer();
+      if (currentIndex < totalQuestions - 1) {
+        loadQuestion(currentIndex + 1);
+      }
+    }
+
+    function prevQuestion() {
+      saveCurrentAnswer();
+      if (currentIndex > 0) {
+        loadQuestion(currentIndex - 1);
+      }
+    }
+
+    function scoreSubmission() {
+      let score = 0;
+      shuffledQuestions.forEach((question, index) => {
+        const answerText = (answers[index] || '').toLowerCase();
+        if (!answerText) return;
+        const matchedKeywords = question.keywords.filter((keyword) => answerText.includes(keyword.toLowerCase()));
+        if (matchedKeywords.length >= Math.max(2, Math.floor(question.keywords.length / 2))) {
+          score += 1;
+        }
+      });
+      return score;
+    }
+
+    function getPerformance(percentage) {
+      if (percentage >= 90) {
+        return { label: 'Excellent', message: 'Exceptional coding readiness. Keep up the strong performance.' };
+      }
+      if (percentage >= 75) {
+        return { label: 'Very Good', message: 'Strong result. A few refinements will help you reach excellence.' };
+      }
+      if (percentage >= 50) {
+        return { label: 'Good', message: 'Solid foundation. Practice more to improve your coding confidence.' };
+      }
+      return { label: 'Needs Improvement', message: 'Review the fundamentals and practice more problems for better scores.' };
+    }
+
+    function submitAssessment() {
+      saveCurrentAnswer();
+      submitted = true;
+      clearInterval(timerInterval);
+      const score = scoreSubmission();
+      const percentage = Math.round((score / totalQuestions) * 100);
+      const performance = getPerformance(percentage);
+      scoreText.textContent = `${score} / ${totalQuestions}`;
+      percentageText.textContent = `${percentage}%`;
+      performanceText.textContent = performance.label;
+      analysisText.textContent = performance.message;
+      resultPanel.classList.add('active');
+      submitBtn.disabled = true;
+      nextBtn.disabled = true;
+      prevBtn.disabled = true;
+    }
+
+    function resetAssessment() {
+      answers = Array(totalQuestions).fill('');
+      timerValue = durationSeconds;
+      submitted = false;
+      resultPanel.classList.remove('active');
+      submitBtn.disabled = false;
+      nextBtn.disabled = false;
+      prevBtn.disabled = false;
+      setCompany(selectedCompany);
+    }
+
+    function setCompany(company) {
+      selectedCompany = company;
+      selectedCompanyLabel.textContent = company;
+      companyButtons.forEach((btn) => btn.classList.toggle('selected', btn.dataset.company === company));
+      submitted = false;
+      resultPanel.classList.remove('active');
+      submitBtn.disabled = false;
+      nextBtn.disabled = false;
+      prevBtn.disabled = false;
+      answers = Array(totalQuestions).fill('');
+      timerValue = durationSeconds;
+      clearInterval(timerInterval);
+      shuffledQuestions = getCompanyQuestions(company);
+      const easyQuestions = shuffle(shuffledQuestions.filter((q) => q.difficulty === 'Easy'));
+      const mediumQuestions = shuffle(shuffledQuestions.filter((q) => q.difficulty === 'Medium'));
+      const hardQuestions = shuffle(shuffledQuestions.filter((q) => q.difficulty === 'Hard'));
+      shuffledQuestions = [...easyQuestions, ...mediumQuestions, ...hardQuestions];
+      currentIndex = 0;
+      loadQuestion(0);
+      startTimer();
+    }
+
+    function initialize() {
+      setCompany(selectedCompany);
+    }
+    nextBtn.addEventListener('click', () => {
+      if (currentIndex === totalQuestions - 1) {
+        submitAssessment();
+      } else {
+        nextQuestion();
+      }
+    });
+    submitBtn.addEventListener('click', submitAssessment);
+    retakeBtn.addEventListener('click', resetAssessment);
+    companyButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        if (button.dataset.company !== selectedCompany) {
+          clearInterval(timerInterval);
+          setCompany(button.dataset.company);
+        }
+      });
+    });
+
+    initialize();
+  </script>
+</body>
+</html>

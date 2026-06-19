@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital Appointment Form</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            padding: 40px 20px;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            background: linear-gradient(135deg, #0f172a, #1e3a8a, #06b6d4,#00776b);
+            background-size: 300% 300%;
+            animation: bgAnimation 10s ease infinite;
+        }
+
+        @keyframes bgAnimation {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        /* Main Container */
+
+        .container {
+            width: 100%;
+
+            display: flex;
+            flex-direction: column;
+
+            justify-content: center;
+            align-items: center;
+        }
+
+        h2 {
+            text-align: center;
+            color: #fff;
+
+            margin-bottom: 25px;
+
+            font-size: 36px;
+            letter-spacing: 1px;
+        }
+
+        form {
+            width: 700px;
+            max-width: 95%;
+
+            background: rgba(255, 255, 255, 0.15);
+
+            backdrop-filter: blur(15px);
+
+            padding: 40px;
+
+            border-radius: 25px;
+
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+
+            border: 1px solid rgba(255, 255, 255, 0.3);
+
+            animation: formAnimation 1s ease;
+        }
+
+        @keyframes formAnimation {
+
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        label {
+            display: block;
+
+            margin-top: 15px;
+            margin-bottom: 8px;
+
+            font-size: 16px;
+
+            font-weight: 600;
+
+            color: #fff;
+        }
+
+        input,
+        select,
+        textarea {
+
+            width: 100%;
+
+            padding: 15px;
+
+            border: none;
+
+            border-radius: 12px;
+
+            outline: none;
+
+            font-size: 16px;
+
+            transition: 0.3s;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+
+            transform: scale(1.02);
+
+            box-shadow: 0 0 15px #38bdf8;
+        }
+
+        input:hover,
+        select:hover,
+        textarea:hover {
+
+            transform: translateY(-2px);
+        }
+
+        textarea {
+
+            resize: none;
+        }
+
+        input::placeholder,
+        textarea::placeholder {
+
+            color: #777;
+        }
+
+        input[type="file"] {
+
+            background: #fff;
+
+            cursor: pointer;
+        }
+
+        input[type="submit"] {
+
+            margin-top: 30px;
+
+            background: linear-gradient(45deg, #2563eb, #06b6d4);
+
+            color: #fff;
+
+            font-size: 18px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            transition: 0.4s;
+        }
+
+        input[type="submit"]:hover {
+
+            transform: translateY(-5px);
+
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        input[type="submit"]:active {
+
+            transform: scale(0.95);
+        }
+
+        select {
+
+            cursor: pointer;
+        }
+
+        @media(max-width:768px) {
+
+            form {
+                padding: 25px;
+            }
+
+            h2 {
+                font-size: 28px;
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h2>Hospital Appointment Form</h2>
+
+        <form autocomplete="on">
+
+            <label for="name">Patient Name:</label>
+
+            <input type="text" id="name" name="name"
+                placeholder="Enter your full name"
+                maxlength="30"
+                pattern="[A-Za-z ]{3,30}"
+                required>
+
+            <label for="age">Patient Age:</label>
+
+            <input type="number" id="age" name="age"
+                placeholder="Enter your age"
+                min="1"
+                max="120"
+                required>
+
+            <label for="bloodgroup">Patient Blood Group:</label>
+
+            <input type="text" id="bloodgroup"
+                name="bloodgroup"
+                placeholder="Example: A+"
+                maxlength="3"
+                pattern="^(A|B|AB|O)[+-]$"
+                required>
+
+            <label for="gender">Patient Gender:</label>
+
+            <select id="gender" name="gender" required>
+
+                <option value="">--Select Gender--</option>
+
+                <option>Male</option>
+
+                <option>Female</option>
+
+                <option>Other</option>
+
+            </select>
+
+            <label for="phone">Patient Phone Number:</label>
+
+            <input type="tel"
+                id="phone"
+                name="phone"
+                placeholder="Enter 10-digit number"
+                maxlength="10"
+                pattern="[0-9]{10}"
+                required>
+
+            <label for="email">Patient Email:</label>
+
+            <input type="email"
+                id="email"
+                name="email"
+                placeholder="Enter your email"
+                required>
+
+            <label for="doctor">Select Doctor:</label>
+
+            <select id="doctor" name="doctor" required>
+
+                <option value="">--Choose a Doctor--</option>
+
+                <option>Dr. Amit Sharma</option>
+
+                <option>Dr. Priya Patel</option>
+
+                <option>Dr. Rahul Verma</option>
+
+                <option>Dr. Neha Singh</option>
+
+                <option>Dr. Sanjay Kumar</option>
+
+                <option>Dr. Anita Desai</option>
+
+            </select>
+
+            <label for="appointment-date">Appointment Date:</label>
+
+            <input type="date"
+                id="appointment-date"
+                name="appointment-date"
+                required>
+
+            <label for="appointment-time">Appointment Time:</label>
+
+            <input type="time"
+                id="appointment-time"
+                name="appointment-time"
+                required>
+
+            <label for="symptoms">Symptoms:</label>
+
+            <textarea id="symptoms"
+                name="symptoms"
+                rows="4"
+                placeholder="Enter your symptoms"
+                maxlength="200"
+                required></textarea>
+
+            <label for="report">Upload Medical Report:</label>
+
+            <input type="file"
+                id="report"
+                name="report"
+                accept=".pdf,.jpg,.jpeg,.png"
+                required>
+
+            <input type="submit" value="Book Appointment">
+
+        </form>
+
+    </div>
+
+    <script>
+
+        const form = document.querySelector("form");
+
+        form.addEventListener("submit", function (e) {
+
+            e.preventDefault();
+
+            const name = document.getElementById("name").value.trim();
+
+            const age = document.getElementById("age").value;
+
+            const phone = document.getElementById("phone").value;
+
+            const date = document.getElementById("appointment-date").value;
+
+            const time = document.getElementById("appointment-time").value;
+
+            if (name.length < 3) {
+
+                alert("Name must contain at least 3 characters.");
+
+                return;
+            }
+
+            if (age < 1 || age > 120) {
+
+                alert("Please enter a valid age.");
+
+                return;
+            }
+
+            if (phone.length !== 10) {
+
+                alert("Phone number must be 10 digits.");
+
+                return;
+            }
+
+            if (date === "") {
+
+                alert("Please select appointment date.");
+
+                return;
+            }
+
+            if (time === "") {
+
+                alert("Please select appointment time.");
+
+                return;
+            }
+
+            alert("Appointment Booked Successfully!");
+
+            form.reset();
+
+        });
+
+    </script>
+
+</body>
+
+</html>

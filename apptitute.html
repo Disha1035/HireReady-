@@ -1,0 +1,2701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HireReady AI - Aptitude Assessment Portal</title>
+  
+  <!-- Google Fonts & FontAwesome -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    :root {
+      /* Theme color variables (Default: Modern Blue-Purple Gradient Theme) */
+      --primary: #6366f1;
+      --secondary: #a855f7;
+      --bg-dark: #090d16;
+      --panel-bg: rgba(15, 22, 41, 0.75);
+      --panel-border: rgba(99, 102, 241, 0.15);
+      --text-main: #edf4ff;
+      --text-muted: #94a3b8;
+      --accent: #3b82f6;
+      
+      --color-easy: #10b981;
+      --color-medium: #f59e0b;
+      --color-hard: #ef4444;
+      
+      --radius-lg: 20px;
+      --radius-md: 12px;
+      --shadow-primary: 0 10px 30px rgba(99, 102, 241, 0.25);
+    }
+
+    /* Company Theme Modifiers */
+    .theme-tcs {
+      --primary: #1f4068;
+      --secondary: #ff4a57;
+      --bg-dark: #050b18;
+      --panel-bg: rgba(10, 25, 47, 0.8);
+      --panel-border: rgba(255, 74, 87, 0.2);
+      --accent: #ff8264;
+    }
+
+    .theme-infosys {
+      --primary: #006699;
+      --secondary: #00bfa5;
+      --bg-dark: #02121e;
+      --panel-bg: rgba(4, 28, 50, 0.8);
+      --panel-border: rgba(0, 191, 165, 0.2);
+      --accent: #00e5ff;
+    }
+
+    .theme-wipro {
+      --primary: #512da8;
+      --secondary: #00bcd4;
+      --bg-dark: #0a051d;
+      --panel-bg: rgba(22, 10, 48, 0.8);
+      --panel-border: rgba(0, 188, 212, 0.2);
+      --accent: #e040fb;
+    }
+
+    .theme-accenture {
+      --primary: #a100ff;
+      --secondary: #6200ea;
+      --bg-dark: #0a0112;
+      --panel-bg: rgba(22, 6, 38, 0.8);
+      --panel-border: rgba(161, 0, 255, 0.2);
+      --accent: #ff007f;
+    }
+
+    .theme-capgemini {
+      --primary: #0070ad;
+      --secondary: #fe5815;
+      --bg-dark: #000c18;
+      --panel-bg: rgba(0, 24, 48, 0.8);
+      --panel-border: rgba(254, 88, 21, 0.2);
+      --accent: #00a8ff;
+    }
+
+    .theme-cognizant {
+      --primary: #0033a0;
+      --secondary: #ffb81c;
+      --bg-dark: #00091a;
+      --panel-bg: rgba(0, 18, 46, 0.85);
+      --panel-border: rgba(255, 184, 28, 0.2);
+      --accent: #00ffd0;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      color: var(--text-main);
+      background: 
+        radial-gradient(circle at top left, rgba(99, 102, 241, 0.12), transparent 40%),
+        radial-gradient(circle at bottom right, rgba(168, 85, 247, 0.12), transparent 40%),
+        var(--bg-dark);
+      background-attachment: fixed;
+      min-height: 100vh;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Main Container & SPA Stages */
+    .app-container {
+      width: 100%;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 20px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .stage {
+      display: none;
+      width: 100%;
+      animation: fadeUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    .stage.active {
+      display: block;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Header Design */
+    header {
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      backdrop-filter: blur(12px);
+      border-radius: var(--radius-lg);
+      padding: 15px 30px;
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .header-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-badge {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      font-family: 'Outfit', sans-serif;
+      font-size: 20px;
+      color: #fff;
+    }
+
+    .logo-text h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .logo-text span {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      display: block;
+    }
+
+    /* Candidate Header info */
+    .header-timer {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .timer-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #fca5a5;
+      padding: 8px 16px;
+      border-radius: 30px;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      box-shadow: 0 0 15px rgba(239, 68, 68, 0.1);
+    }
+
+    .timer-badge.normal {
+      background: rgba(99, 102, 241, 0.1);
+      border-color: rgba(99, 102, 241, 0.3);
+      color: #c7d2fe;
+      box-shadow: none;
+    }
+
+    .timer-badge.warning {
+      animation: pulseAlert 1s infinite alternate;
+    }
+
+    @keyframes pulseAlert {
+      from { box-shadow: 0 0 5px rgba(239, 68, 68, 0.2); }
+      to { box-shadow: 0 0 20px rgba(239, 68, 68, 0.5); border-color: rgba(239, 68, 68, 0.6); }
+    }
+
+    /* General Panel Styling */
+    .panel {
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      backdrop-filter: blur(12px);
+      border-radius: var(--radius-lg);
+      padding: 30px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Title Styling */
+    h2.panel-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      background: linear-gradient(to right, #ffffff, var(--text-muted));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Setup & Instructions Page */
+    .setup-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 30px;
+      margin-top: 10px;
+    }
+
+    .setup-form-section {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .input-group label {
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .input-group input {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-md);
+      padding: 14px 18px;
+      font-size: 16px;
+      color: #fff;
+      outline: none;
+      transition: all 0.3s;
+    }
+
+    .input-group input:focus {
+      border-color: var(--primary);
+      background: rgba(255, 255, 255, 0.07);
+      box-shadow: 0 0 15px rgba(99, 102, 241, 0.15);
+    }
+
+    /* Company Cards Grid */
+    .company-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+    }
+
+    .company-card {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .company-card:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(255, 255, 255, 0.1);
+      transform: translateY(-4px);
+    }
+
+    .company-card.selected {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(168, 85, 247, 0.15));
+      border-color: var(--primary);
+      box-shadow: 0 0 20px rgba(99, 102, 241, 0.2);
+    }
+
+    .company-logo-placeholder {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.05);
+      display: grid;
+      place-items: center;
+      font-size: 20px;
+      color: #fff;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+    }
+
+    .company-card.selected .company-logo-placeholder {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+    }
+
+    /* Brand Logo Accent colors on cards */
+    .comp-tcs .company-logo-placeholder { color: #ff6b35; }
+    .comp-infy .company-logo-placeholder { color: #007cc3; }
+    .comp-wipro .company-logo-placeholder { color: #4dd0e1; }
+    .comp-acc .company-logo-placeholder { color: #b900ff; }
+    .comp-cap .company-logo-placeholder { color: #0091ea; }
+    .comp-cog .company-logo-placeholder { color: #ffb300; }
+
+    .company-card .comp-name {
+      font-weight: 700;
+      font-size: 16px;
+    }
+
+    .company-card .comp-desc {
+      font-size: 11px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* Guidelines section */
+    .guidelines-section {
+      background: rgba(255, 255, 255, 0.01);
+      border-left: 4px solid var(--primary);
+      padding: 20px 25px;
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    }
+
+    .guidelines-list {
+      margin-top: 12px;
+      list-style-type: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    .guidelines-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      line-height: 1.5;
+    }
+
+    .guidelines-list li i {
+      color: var(--primary);
+      margin-top: 3px;
+      font-size: 12px;
+    }
+
+    /* Buttons */
+    .btn {
+      appearance: none;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      font-weight: 700;
+      font-size: 15px;
+      padding: 14px 28px;
+      border-radius: var(--radius-md);
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: #fff;
+      box-shadow: var(--shadow-primary);
+    }
+
+    .btn-primary:hover {
+      box-shadow: 0 12px 35px rgba(99, 102, 241, 0.4);
+      filter: brightness(1.1);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text-main);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: var(--text-main);
+    }
+
+    .btn-outline:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: var(--primary);
+    }
+
+    .btn-danger {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #fca5a5;
+    }
+
+    .btn-danger:hover {
+      background: rgba(239, 68, 68, 0.25);
+    }
+
+    .btn-purple {
+      background: rgba(168, 85, 247, 0.15);
+      border: 1px solid rgba(168, 85, 247, 0.3);
+      color: #e9d5ff;
+    }
+
+    .btn-purple:hover {
+      background: rgba(168, 85, 247, 0.25);
+    }
+
+    /* Core Assessment Layout */
+    .exam-layout {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 24px;
+      align-items: start;
+    }
+
+    /* Progress and State Statistics bar */
+    .progress-section {
+      background: rgba(255, 255, 255, 0.01);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      border-radius: var(--radius-md);
+      padding: 15px 20px;
+      margin-bottom: 20px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .progress-bar-container {
+      width: 100%;
+    }
+
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .progress-bar-bg {
+      height: 8px;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      border-radius: 4px;
+      transition: width 0.35s ease;
+    }
+
+    .progress-stats-summary {
+      display: flex;
+      gap: 15px;
+      font-size: 13px;
+    }
+
+    .stat-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+
+    .stat-badge span {
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .stat-badge.ans i { color: var(--color-easy); }
+    .stat-badge.marked i { color: #c084fc; }
+
+    /* Left Column: Question Area */
+    .question-card {
+      min-height: 400px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .question-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      margin-bottom: 24px;
+    }
+
+    .question-number {
+      font-family: 'Outfit', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .question-badges {
+      display: flex;
+      gap: 10px;
+    }
+
+    .badge-tag {
+      font-size: 12px;
+      font-weight: 700;
+      padding: 6px 12px;
+      border-radius: 30px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .badge-tag.difficulty-easy {
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: #a7f3d0;
+    }
+
+    .badge-tag.difficulty-medium {
+      background: rgba(245, 158, 11, 0.12);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      color: #fde68a;
+    }
+
+    .badge-tag.difficulty-hard {
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #fca5a5;
+    }
+
+    .badge-tag.category-badge {
+      background: rgba(99, 102, 241, 0.12);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      color: #c7d2fe;
+    }
+
+    .question-text {
+      font-size: 18px;
+      line-height: 1.6;
+      font-weight: 500;
+      margin-bottom: 28px;
+      color: #fff;
+    }
+
+    /* Option Cards */
+    .options-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-bottom: 30px;
+    }
+
+    .option-card {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: var(--radius-md);
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .option-card::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: transparent;
+      transition: background 0.2s;
+    }
+
+    .option-card:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(99, 102, 241, 0.2);
+    }
+
+    .option-card.selected {
+      background: rgba(99, 102, 241, 0.07);
+      border-color: var(--primary);
+      box-shadow: 0 4px 20px rgba(99, 102, 241, 0.1);
+    }
+
+    .option-card.selected::before {
+      background: var(--primary);
+    }
+
+    .option-radio {
+      display: none;
+    }
+
+    .option-letter {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      display: grid;
+      place-items: center;
+      font-weight: 700;
+      font-size: 13px;
+      color: var(--text-muted);
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+
+    .option-card:hover .option-letter {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .option-card.selected .option-letter {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+    }
+
+    .option-text {
+      font-size: 15px;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+
+    /* Action bar */
+    .question-actions-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .action-group-left {
+      display: flex;
+      gap: 10px;
+    }
+
+    .action-group-right {
+      display: flex;
+      gap: 10px;
+    }
+
+    /* Right Column: Sidebar Palette & Profile */
+    .sidebar-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .candidate-info-card {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      display: grid;
+      place-items: center;
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+      box-shadow: 0 0 15px rgba(99, 102, 241, 0.2);
+    }
+
+    .candidate-details h4 {
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 2px;
+    }
+
+    .candidate-details p {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .palette-card {
+      padding: 24px;
+    }
+
+    .palette-title {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      padding-bottom: 8px;
+    }
+
+    /* 3x5 Grid Layout */
+    .palette-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .palette-btn {
+      aspect-ratio: 1;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--text-muted);
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      position: relative;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .palette-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.15);
+      transform: translateY(-2px);
+    }
+
+    .palette-btn.active-q {
+      border: 2px solid var(--primary);
+      color: #fff !important;
+      box-shadow: 0 0 10px rgba(99, 102, 241, 0.3);
+    }
+
+    /* Colors by status */
+    .palette-not-visited {
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--text-muted);
+    }
+
+    .palette-not-answered {
+      background: rgba(239, 68, 68, 0.12);
+      border-color: rgba(239, 68, 68, 0.3);
+      color: #fca5a5;
+    }
+
+    .palette-answered {
+      background: rgba(16, 185, 129, 0.15);
+      border-color: rgba(16, 185, 129, 0.4);
+      color: #a7f3d0;
+    }
+
+    .palette-marked {
+      background: rgba(168, 85, 247, 0.12);
+      border-color: rgba(168, 85, 247, 0.3);
+      color: #e9d5ff;
+    }
+
+    /* Marked & Answered - special icon indicator or visual */
+    .palette-marked-answered {
+      background: rgba(168, 85, 247, 0.15);
+      border-color: rgba(16, 185, 129, 0.4);
+      color: #e9d5ff;
+    }
+
+    .palette-marked-answered::after {
+      content: "";
+      position: absolute;
+      top: 3px;
+      right: 3px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--color-easy);
+      box-shadow: 0 0 6px var(--color-easy);
+    }
+
+    /* Palette Legend */
+    .palette-legend {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      font-size: 11px;
+      color: var(--text-muted);
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      padding-top: 15px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .legend-color {
+      width: 14px;
+      height: 14px;
+      border-radius: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      flex-shrink: 0;
+    }
+
+    .legend-color.not-visited { background: rgba(255, 255, 255, 0.03); }
+    .legend-color.not-answered { background: rgba(239, 68, 68, 0.12); border-color: rgba(239, 68, 68, 0.3); }
+    .legend-color.answered { background: rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.4); }
+    .legend-color.marked { background: rgba(168, 85, 247, 0.12); border-color: rgba(168, 85, 247, 0.3); }
+    .legend-color.marked-ans { background: rgba(168, 85, 247, 0.15); border-color: rgba(16, 185, 129, 0.4); position: relative; }
+    .legend-color.marked-ans::after {
+      content: ""; position: absolute; top: 2px; right: 2px; width: 3px; height: 3px; border-radius: 50%; background: var(--color-easy);
+    }
+
+    /* Submit Block in Sidebar */
+    .sidebar-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .sidebar-actions .btn {
+      width: 100%;
+      padding: 15px;
+    }
+
+    /* Confirmation Modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 8, 16, 0.85);
+      backdrop-filter: blur(8px);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-card {
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: var(--radius-lg);
+      padding: 35px;
+      width: 100%;
+      max-width: 480px;
+      text-align: center;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+      transform: scale(0.9);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .modal-overlay.active .modal-card {
+      transform: scale(1);
+    }
+
+    .modal-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: rgba(168, 85, 247, 0.12);
+      border: 1px solid rgba(168, 85, 247, 0.3);
+      color: var(--secondary);
+      display: grid;
+      place-items: center;
+      font-size: 26px;
+      margin: 0 auto 20px;
+    }
+
+    .modal-card h3 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .modal-card p {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    .modal-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: var(--radius-md);
+      padding: 12px;
+      margin-bottom: 28px;
+    }
+
+    .modal-stat-box .num {
+      font-size: 18px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .modal-stat-box .lbl {
+      font-size: 10px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    .modal-buttons {
+      display: flex;
+      gap: 12px;
+    }
+
+    .modal-buttons .btn {
+      flex: 1;
+    }
+
+    /* Results Screen */
+    .result-grid {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .result-score-card {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+
+    /* Circular Score Gauge */
+    .score-gauge-container {
+      position: relative;
+      width: 180px;
+      height: 180px;
+      margin: 10px 0;
+    }
+
+    .score-gauge-svg {
+      transform: rotate(-90deg);
+      width: 100%;
+      height: 100%;
+    }
+
+    .score-gauge-bg {
+      fill: none;
+      stroke: rgba(255, 255, 255, 0.04);
+      stroke-width: 12;
+    }
+
+    .score-gauge-fill {
+      fill: none;
+      stroke: url(#gauge-grad);
+      stroke-width: 12;
+      stroke-linecap: round;
+      stroke-dasharray: 528;
+      stroke-dashoffset: 528;
+      transition: stroke-dashoffset 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .score-gauge-content {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .score-gauge-pct {
+      font-family: 'Outfit', sans-serif;
+      font-size: 38px;
+      font-weight: 900;
+      color: #fff;
+      line-height: 1;
+    }
+
+    .score-gauge-fraction {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 4px;
+      font-weight: 600;
+    }
+
+    .performance-label {
+      font-size: 24px;
+      font-weight: 800;
+      font-family: 'Outfit', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Custom color tags by score status */
+    .perf-excellent { color: var(--color-easy); text-shadow: 0 0 10px rgba(16, 185, 129, 0.2); }
+    .perf-verygood { color: var(--accent); text-shadow: 0 0 10px rgba(59, 130, 246, 0.2); }
+    .perf-good { color: var(--color-medium); text-shadow: 0 0 10px rgba(245, 158, 11, 0.2); }
+    .perf-poor { color: var(--color-hard); text-shadow: 0 0 10px rgba(239, 68, 68, 0.2); }
+
+    .performance-text {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 10px;
+    }
+
+    .result-stats-dashboard {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: var(--radius-md);
+      padding: 15px;
+    }
+
+    .result-stat-box {
+      text-align: center;
+    }
+
+    .result-stat-box .icon {
+      font-size: 16px;
+      margin-bottom: 6px;
+    }
+
+    .result-stat-box.correct .icon { color: var(--color-easy); }
+    .result-stat-box.incorrect .icon { color: var(--color-hard); }
+    .result-stat-box.unattempted .icon { color: var(--text-muted); }
+
+    .result-stat-box .val {
+      font-size: 20px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .result-stat-box .lbl {
+      font-size: 10px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    /* Review & Solutions section */
+    .solutions-panel h3 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .solutions-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .solution-item {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      transition: all 0.3s;
+    }
+
+    .solution-item.correct-ans {
+      border-left: 4px solid var(--color-easy);
+    }
+
+    .solution-item.incorrect-ans {
+      border-left: 4px solid var(--color-hard);
+    }
+
+    .solution-item.unattempted-ans {
+      border-left: 4px solid var(--text-muted);
+    }
+
+    .solution-header {
+      padding: 16px 20px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      user-select: none;
+      transition: background 0.2s;
+    }
+
+    .solution-header:hover {
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .solution-header-info {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .solution-number {
+      font-weight: 700;
+      font-size: 15px;
+      color: #fff;
+    }
+
+    .solution-status-icon {
+      font-size: 16px;
+    }
+
+    .correct-ans .solution-status-icon { color: var(--color-easy); }
+    .incorrect-ans .solution-status-icon { color: var(--color-hard); }
+    .unattempted-ans .solution-status-icon { color: var(--text-muted); }
+
+    .solution-q-preview {
+      font-size: 14px;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 450px;
+    }
+
+    .solution-expand-icon {
+      font-size: 12px;
+      color: var(--text-muted);
+      transition: transform 0.3s;
+    }
+
+    .solution-item.expanded .solution-expand-icon {
+      transform: rotate(180deg);
+    }
+
+    .solution-body {
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.15);
+      border-top: 1px solid rgba(255, 255, 255, 0.04);
+      display: none;
+    }
+
+    .solution-item.expanded .solution-body {
+      display: block;
+    }
+
+    .solution-body .q-text {
+      font-weight: 600;
+      font-size: 15px;
+      line-height: 1.5;
+      margin-bottom: 16px;
+      color: #fff;
+    }
+
+    .solution-options-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .solution-opt {
+      padding: 10px 15px;
+      border-radius: 6px;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.01);
+      border: 1px solid rgba(255, 255, 255, 0.03);
+    }
+
+    .solution-opt.opt-correct {
+      background: rgba(16, 185, 129, 0.08);
+      border-color: rgba(16, 185, 129, 0.2);
+      color: #a7f3d0;
+      font-weight: 600;
+    }
+
+    .solution-opt.opt-user-wrong {
+      background: rgba(239, 68, 68, 0.08);
+      border-color: rgba(239, 68, 68, 0.2);
+      color: #fca5a5;
+      font-weight: 600;
+    }
+
+    .solution-opt-letter {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.05);
+      display: grid;
+      place-items: center;
+      font-weight: 700;
+      font-size: 11px;
+    }
+
+    .opt-correct .solution-opt-letter {
+      background: var(--color-easy);
+      color: #fff;
+    }
+
+    .opt-user-wrong .solution-opt-letter {
+      background: var(--color-hard);
+      color: #fff;
+    }
+
+    .explanation-box {
+      background: rgba(99, 102, 241, 0.04);
+      border: 1px solid rgba(99, 102, 241, 0.1);
+      border-radius: var(--radius-md);
+      padding: 18px;
+    }
+
+    .explanation-box h5 {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--primary);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .explanation-box p {
+      font-size: 13.5px;
+      color: var(--text-main);
+      line-height: 1.6;
+    }
+
+    /* Footer Branding */
+    footer.app-footer {
+      text-align: center;
+      padding: 30px 20px;
+      color: var(--text-muted);
+      font-size: 12px;
+      border-top: 1px solid rgba(255, 255, 255, 0.03);
+      margin-top: 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1400px;
+      width: 100%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    footer.app-footer a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--bg-dark);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1024px) {
+      .exam-layout {
+        grid-template-columns: 1fr;
+      }
+      .sidebar-panel {
+        flex-direction: column-reverse;
+      }
+      .palette-card {
+        order: 1;
+      }
+      .candidate-info-card {
+        order: 2;
+      }
+      .result-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 10px;
+      }
+      .app-container {
+        padding: 10px;
+      }
+      header {
+        padding: 15px 20px;
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+      }
+      .header-timer {
+        width: 100%;
+        justify-content: space-between;
+      }
+      .setup-grid {
+        grid-template-columns: 1fr;
+      }
+      .company-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .progress-section {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+      .progress-stats-summary {
+        width: 100%;
+        justify-content: space-between;
+      }
+      .question-actions-bar {
+        flex-direction: column-reverse;
+        gap: 15px;
+      }
+      .action-group-left, .action-group-right {
+        width: 100%;
+      }
+      .action-group-left .btn, .action-group-right .btn {
+        flex: 1;
+      }
+      footer.app-footer {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body class="theme-default">
+
+  <!-- SVG gradient definition for the circular gauge -->
+  <svg style="width:0; height:0; position:absolute;">
+    <defs>
+      <linearGradient id="gauge-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="var(--primary)" />
+        <stop offset="100%" stop-color="var(--secondary)" />
+      </linearGradient>
+    </defs>
+  </svg>
+
+  <div class="app-container" id="app-container">
+    
+    <!-- HEADER BAR -->
+    <header>
+      <div class="header-logo">
+        <div class="logo-badge" id="header-logo-badge">HR</div>
+        <div class="logo-text">
+          <h1 id="header-portal-title">HireReady Placement Assessment</h1>
+          <span id="header-portal-subtitle">AI Placement Interview Preparation System</span>
+        </div>
+      </div>
+      
+      <div class="header-timer">
+        <!-- Timer (only visible during exam) -->
+        <div class="timer-badge normal hidden" id="exam-timer-container">
+          <i class="fa-solid fa-hourglass-half"></i>
+          <span id="exam-timer">10:00</span>
+        </div>
+        
+        <!-- Dashboard Button -->
+        <button class="btn btn-secondary" style="padding: 10px 18px; font-size: 13px;" onclick="window.location.href='interview.html'">
+          <i class="fa-solid fa-arrow-left"></i> Dashboard
+        </button>
+      </div>
+    </header>
+
+    <!-- STAGE 1: INSTRUCTIONS & SETUP -->
+    <section class="stage active" id="setup-stage">
+      <div class="panel">
+        <h2 class="panel-title"><i class="fa-solid fa-clipboard-question" style="color: var(--primary); margin-right: 10px;"></i> Aptitude Assessment Setup</h2>
+        
+        <div class="setup-grid">
+          
+          <!-- Form Details & Settings -->
+          <div class="setup-form-section">
+            <div class="input-group">
+              <label for="candidate-name-input">Candidate Name</label>
+              <input type="text" id="candidate-name-input" placeholder="Enter your full name" value="John Doe">
+            </div>
+
+            <div class="input-group" style="margin-top: 10px;">
+              <label>Select Target Company Theme</label>
+              <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">
+                Selecting a company loads their assessment configuration, corporate styling, and specific rules.
+              </p>
+              
+              <div class="company-grid">
+                <div class="company-card comp-tcs selected" onclick="selectCompanyTheme('tcs')">
+                  <div class="company-logo-placeholder">TCS</div>
+                  <div class="comp-name">TCS iON</div>
+                  <div class="comp-desc">NQT Simulator</div>
+                </div>
+                <div class="company-card comp-infy" onclick="selectCompanyTheme('infosys')">
+                  <div class="company-logo-placeholder">INF</div>
+                  <div class="comp-name">Infosys</div>
+                  <div class="comp-desc">InfyTQ Challenge</div>
+                </div>
+                <div class="company-card comp-wipro" onclick="selectCompanyTheme('wipro')">
+                  <div class="company-logo-placeholder">WIP</div>
+                  <div class="comp-name">Wipro</div>
+                  <div class="comp-desc">Elite NLTH</div>
+                </div>
+                <div class="company-card comp-acc" onclick="selectCompanyTheme('accenture')">
+                  <div class="company-logo-placeholder">ACN</div>
+                  <div class="comp-name">Accenture</div>
+                  <div class="comp-desc">Cognitive Portal</div>
+                </div>
+                <div class="company-card comp-cap" onclick="selectCompanyTheme('capgemini')">
+                  <div class="company-logo-placeholder">CAP</div>
+                  <div class="comp-name">Capgemini</div>
+                  <div class="comp-desc">L&D Assessment</div>
+                </div>
+                <div class="company-card comp-cog" onclick="selectCompanyTheme('cognizant')">
+                  <div class="company-logo-placeholder">CTS</div>
+                  <div class="comp-name">Cognizant</div>
+                  <div class="comp-desc">GenC Profile</div>
+                </div>
+              </div>
+            </div>
+            
+            <button class="btn btn-primary" style="margin-top: 15px; padding: 16px;" onclick="startAssessment()">
+              <i class="fa-solid fa-play"></i> Initialize & Start Test
+            </button>
+          </div>
+
+          <!-- Instructions Card -->
+          <div class="guidelines-section">
+            <h3 style="font-family: 'Outfit', sans-serif; font-size: 18px; margin-bottom: 12px;"><i class="fa-solid fa-circle-info" style="color: var(--primary);"></i> Exam Guidelines & Structure</h3>
+            <p style="font-size: 13.5px; color: var(--text-muted); line-height: 1.6;">
+              Please read the assessment instructions carefully before starting. The system simulates official company environments.
+            </p>
+            
+            <ul class="guidelines-list">
+              <li>
+                <i class="fa-solid fa-circle-chevron-right"></i>
+                <div>
+                  <strong>15 Randomized Questions</strong>: The test comprises 15 questions selected at random (5 Easy, 5 Medium, 5 Hard) from a validated recruitment test bank.
+                </div>
+              </li>
+              <li>
+                <i class="fa-solid fa-circle-chevron-right"></i>
+                <div>
+                  <strong>Strict Time Limit</strong>: You have exactly <strong>10 minutes (600 seconds)</strong>. A countdown timer will show in the header. The test auto-submits on timeout.
+                </div>
+              </li>
+              <li>
+                <i class="fa-solid fa-circle-chevron-right"></i>
+                <div>
+                  <strong>Question Palette</strong>: Use the interactive grid on the right sidebar to jump between questions. Color indicators show answered, visited, and flagged questions.
+                </div>
+              </li>
+              <li>
+                <i class="fa-solid fa-circle-chevron-right"></i>
+                <div>
+                  <strong>Mark for Review</strong>: You can flag questions to review them later. You can submit when they are still flagged; they will be scored if answers are selected.
+                </div>
+              </li>
+              <li>
+                <i class="fa-solid fa-circle-chevron-right"></i>
+                <div>
+                  <strong>Marking Scheme</strong>: Each correct answer earns 1 mark. There is <strong>no negative marking</strong>.
+                </div>
+              </li>
+            </ul>
+
+            <div style="background: rgba(255, 255, 255, 0.02); padding: 15px; border-radius: var(--radius-md); border: 1px dashed rgba(255,255,255,0.06); margin-top: 20px;">
+              <span style="font-size: 11px; text-transform: uppercase; color: var(--text-muted); font-weight: 700; display: block; margin-bottom: 5px;">Active Exam Profile</span>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span id="setup-company-badge" class="badge-tag difficulty-medium" style="background: rgba(99, 102, 241, 0.15); color: #fff; border-color: var(--primary);">TCS iON NQT Theme</span>
+                <span class="badge-tag difficulty-easy">Aptitude & Logic</span>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    </section>
+
+    <!-- STAGE 2: LIVE TEST PORTAL -->
+    <section class="stage" id="exam-stage">
+      
+      <!-- Top Progress Section -->
+      <div class="progress-section">
+        <div class="progress-bar-container">
+          <div class="progress-meta">
+            <span>Progress (Attempted Questions)</span>
+            <span id="progress-percentage-text">0% Completed</span>
+          </div>
+          <div class="progress-bar-bg">
+            <div class="progress-bar-fill" id="progress-bar-fill"></div>
+          </div>
+        </div>
+        
+        <div class="progress-stats-summary">
+          <div class="stat-badge ans">
+            <i class="fa-solid fa-circle-check"></i> Answered: <span id="stat-answered-count">0</span>
+          </div>
+          <div class="stat-badge marked">
+            <i class="fa-solid fa-circle-radiation" style="color: #c084fc;"></i> Flagged: <span id="stat-marked-count">0</span>
+          </div>
+          <div class="stat-badge">
+            <i class="fa-solid fa-circle-minus"></i> Unattempted: <span id="stat-unattempted-count">15</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Layout -->
+      <div class="exam-layout">
+        
+        <!-- Left: Question Container -->
+        <div class="panel question-card">
+          <div id="question-loading-spinner" style="display:none; text-align: center; padding: 50px;">
+            <i class="fa-solid fa-spinner fa-spin" style="font-size: 40px; color: var(--primary);"></i>
+          </div>
+          
+          <div id="question-content-wrapper">
+            <!-- Header metadata -->
+            <div class="question-card-header">
+              <span class="question-number" id="question-index-title">Question 1 of 15</span>
+              <div class="question-badges">
+                <span class="badge-tag difficulty-easy" id="question-difficulty-badge">Easy</span>
+                <span class="badge-tag category-badge" id="question-category-badge">Quantitative Aptitude</span>
+              </div>
+            </div>
+
+            <!-- Question prompt -->
+            <div class="question-text" id="question-prompt-text">
+              Loading question...
+            </div>
+
+            <!-- MCQs Options -->
+            <div class="options-grid" id="question-options-container">
+              <!-- Dynamically populated option cards -->
+            </div>
+
+            <!-- Bottom Navigation Bar -->
+            <div class="question-actions-bar">
+              <div class="action-group-left">
+                <button class="btn btn-secondary" onclick="clearActiveResponse()">
+                  <i class="fa-solid fa-eraser"></i> Clear
+                </button>
+                <button class="btn btn-purple" onclick="toggleActiveMarkForReview()">
+                  <i class="fa-solid fa-flag"></i> Mark for Review
+                </button>
+              </div>
+              <div class="action-group-right">
+                <button class="btn btn-outline" id="prev-question-btn" onclick="goToPrevQuestion()">
+                  <i class="fa-solid fa-chevron-left"></i> Previous
+                </button>
+                <button class="btn btn-primary" id="next-question-btn" onclick="goToNextQuestion()">
+                  Save & Next <i class="fa-solid fa-chevron-right"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Sidebar Question Palette -->
+        <div class="sidebar-panel">
+          
+          <!-- Candidate snapshot card -->
+          <div class="candidate-info-card">
+            <div class="avatar" id="candidate-avatar">JD</div>
+            <div class="candidate-details">
+              <h4 id="candidate-name-display">John Doe</h4>
+              <p><i class="fa-solid fa-circle" style="color: var(--color-easy); font-size: 8px; margin-right: 4px;"></i> Candidate Status: Active</p>
+            </div>
+          </div>
+
+          <!-- Question Palette Card -->
+          <div class="panel palette-card">
+            <h3 class="palette-title">Question Palette</h3>
+            
+            <div class="palette-grid" id="palette-grid-container">
+              <!-- Dynamically populated 15 buttons -->
+            </div>
+
+            <!-- Palette Legend -->
+            <div class="palette-legend">
+              <div class="legend-item">
+                <div class="legend-color answered"></div>
+                <span>Answered</span>
+              </div>
+              <div class="legend-item">
+                <div class="legend-color not-answered"></div>
+                <span>Not Answered</span>
+              </div>
+              <div class="legend-item">
+                <div class="legend-color marked"></div>
+                <span>Marked</span>
+              </div>
+              <div class="legend-item">
+                <div class="legend-color marked-ans"></div>
+                <span>Marked & Ans</span>
+              </div>
+              <div class="legend-item" style="grid-column: span 2;">
+                <div class="legend-color not-visited"></div>
+                <span>Not Visited</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Submit Action -->
+          <div class="sidebar-actions">
+            <button class="btn btn-primary" style="background: linear-gradient(135deg, var(--secondary), #ef4444); box-shadow: none;" onclick="openSubmitModal()">
+              <i class="fa-solid fa-square-check"></i> Submit Test
+            </button>
+          </div>
+
+        </div>
+        
+      </div>
+    </section>
+
+    <!-- STAGE 3: TEST REPORT & DETAILED ANALYSIS -->
+    <section class="stage" id="result-stage">
+      <div class="result-grid">
+        
+        <!-- Score & Performance Card -->
+        <div class="panel result-score-card">
+          <h2 class="panel-title" style="margin-bottom: 10px;">Test Result</h2>
+          
+          <!-- Gauge -->
+          <div class="score-gauge-container">
+            <svg class="score-gauge-svg">
+              <circle class="score-gauge-bg" cx="90" cy="90" r="84"></circle>
+              <circle class="score-gauge-fill" id="score-gauge-fill" cx="90" cy="90" r="84"></circle>
+            </svg>
+            <div class="score-gauge-content">
+              <span class="score-gauge-pct" id="score-percentage">0%</span>
+              <span class="score-gauge-fraction" id="score-fraction">0 / 15 Marks</span>
+            </div>
+          </div>
+
+          <div class="performance-label" id="performance-label-text">Good</div>
+          <p class="performance-text" id="performance-feedback-text">
+            You have successfully completed the test. Take a look at the breakdown below.
+          </p>
+
+          <div class="result-stats-dashboard">
+            <div class="result-stat-box correct">
+              <div class="icon"><i class="fa-solid fa-circle-check"></i></div>
+              <div class="val" id="result-correct-count">0</div>
+              <div class="lbl">Correct</div>
+            </div>
+            <div class="result-stat-box incorrect">
+              <div class="icon"><i class="fa-solid fa-circle-xmark"></i></div>
+              <div class="val" id="result-incorrect-count">0</div>
+              <div class="lbl">Wrong</div>
+            </div>
+            <div class="result-stat-box unattempted">
+              <div class="icon"><i class="fa-solid fa-circle-minus"></i></div>
+              <div class="val" id="result-unattempted-count">0</div>
+              <div class="lbl">Skipped</div>
+            </div>
+          </div>
+
+          <div class="sidebar-actions" style="width: 100%; margin-top: 15px;">
+            <button class="btn btn-primary" onclick="restartAssessment()">
+              <i class="fa-solid fa-arrow-rotate-right"></i> Retake Test
+            </button>
+            <button class="btn btn-secondary" onclick="window.location.href='interview.html'">
+              <i class="fa-solid fa-house"></i> Back to Activities
+            </button>
+          </div>
+        </div>
+
+        <!-- Detailed Explanations Panel -->
+        <div class="panel solutions-panel">
+          <h3><i class="fa-solid fa-lightbulb" style="color: var(--color-medium);"></i> Answer Keys & Detailed Explanations</h3>
+          <p style="font-size: 13.5px; color: var(--text-muted); margin-bottom: 20px; line-height: 1.5;">
+            Review each question, your selected answer, the correct option, and step-by-step mathematical/logical explanations.
+          </p>
+
+          <div class="solutions-list" id="solutions-list-container">
+            <!-- Dynamically populated answer review rows -->
+          </div>
+        </div>
+        
+      </div>
+    </section>
+
+  </div>
+
+  <!-- CONFIRMATION SUBMIT MODAL -->
+  <div class="modal-overlay" id="submit-confirm-modal">
+    <div class="modal-card">
+      <div class="modal-icon">
+        <i class="fa-solid fa-circle-question"></i>
+      </div>
+      <h3>Submit Your Assessment?</h3>
+      <p>
+        Are you sure you want to finish the test? You will not be able to change your answers once submitted.
+      </p>
+      
+      <div class="modal-stats">
+        <div class="modal-stat-box">
+          <div class="num" id="modal-stat-ans">0</div>
+          <div class="lbl">Answered</div>
+        </div>
+        <div class="modal-stat-box">
+          <div class="num" id="modal-stat-marked">0</div>
+          <div class="lbl">Flagged</div>
+        </div>
+        <div class="modal-stat-box">
+          <div class="num" id="modal-stat-unans">15</div>
+          <div class="lbl">Unanswered</div>
+        </div>
+      </div>
+
+      <div class="modal-buttons">
+        <button class="btn btn-secondary" onclick="closeSubmitModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="confirmSubmitTest()">Yes, Submit</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="app-footer">
+    <div>
+      Powered by <strong>HireReady AI Placement Engine</strong> &copy; 2026. All rights reserved.
+    </div>
+    <div>
+      <a href="interview.html">Exit Simulator</a> | <a href="#" onclick="restartAssessment()">Reset Session</a>
+    </div>
+  </footer>
+
+  <!-- JAVASCRIPT CORE LOGIC -->
+  <script>
+    // ----------------------------------------------------
+    // QUESTION BANK (30 Questions: 10 Easy, 10 Medium, 10 Hard)
+    // ----------------------------------------------------
+    const QUESTION_POOL = [
+      // === EASY QUESTIONS (0 to 9) ===
+      {
+        id: 1,
+        category: "Quantitative Aptitude",
+        difficulty: "Easy",
+        question: "A and B can do a work in 12 days, B and C in 15 days, C and A in 20 days. If A, B, and C work together, they will complete the work in:",
+        options: ["5 days", "8 days", "10 days", "12 days"],
+        correctIndex: 2,
+        explanation: "1. Let (A + B)'s 1-day work = 1/12<br>2. Let (B + C)'s 1-day work = 1/15<br>3. Let (C + A)'s 1-day work = 1/20<br><br>Adding all three equations:<br>2(A + B + C)'s 1-day work = (1/12 + 1/15 + 1/20) = (5 + 4 + 3) / 60 = 12/60 = 1/5.<br><br>Therefore, (A + B + C)'s 1-day work = 1 / (5 × 2) = 1/10.<br>So, they will complete the work together in <strong>10 days</strong>."
+      },
+      {
+        id: 2,
+        category: "Quantitative Aptitude",
+        difficulty: "Easy",
+        question: "What is the probability of getting a sum of 9 from two throws of a single dice?",
+        options: ["1/6", "1/8", "1/9", "1/12"],
+        correctIndex: 2,
+        explanation: "1. The total number of outcomes when two dice are thrown is 6 × 6 = 36.<br>2. Favorable outcomes to get a sum of 9 are: (3, 6), (4, 5), (5, 4), and (6, 3).<br>3. Number of favorable outcomes = 4.<br>4. Probability = Favorable Outcomes / Total Outcomes = 4/36 = <strong>1/9</strong>."
+      },
+      {
+        id: 3,
+        category: "Quantitative Aptitude",
+        difficulty: "Easy",
+        question: "A fruit seller had some apples. He sells 40% of his apples and still has 420 apples. How many apples did he have originally?",
+        options: ["588 apples", "600 apples", "672 apples", "700 apples"],
+        correctIndex: 3,
+        explanation: "1. Let the total number of original apples be X.<br>2. The seller sells 40%, which means he is left with 100% - 40% = 60% of his apples.<br>3. Given that 60% of X = 420.<br>4. 0.60 * X = 420  =>  X = 420 / 0.60 = <strong>700 apples</strong>."
+      },
+      {
+        id: 4,
+        category: "Logical Reasoning",
+        difficulty: "Easy",
+        question: "If in a certain code, TIGER is written as SFHDQ, then how is HORSE written in that code?",
+        options: ["GNQRD", "GQPND", "GRNQD", "GNQRE"],
+        correctIndex: 0,
+        explanation: "1. Analyze the pattern of the code TIGER → SFHDQ:<br>&nbsp;&nbsp;T (-1) = S<br>&nbsp;&nbsp;I (-1) = H<br>&nbsp;&nbsp;G (-1) = F<br>&nbsp;&nbsp;E (-1) = D<br>&nbsp;&nbsp;R (-1) = Q<br>2. Apply the same pattern (-1 shift) to HORSE:<br>&nbsp;&nbsp;H (-1) = G<br>&nbsp;&nbsp;O (-1) = N<br>&nbsp;&nbsp;R (-1) = Q<br>&nbsp;&nbsp;S (-1) = R<br>&nbsp;&nbsp;E (-1) = D<br>3. The resulting code is <strong>GNQRD</strong>."
+      },
+      {
+        id: 5,
+        category: "Logical Reasoning",
+        difficulty: "Easy",
+        question: "Pointing to a photograph of a boy, Suresh said, 'He is the son of the only son of my mother.' How is Suresh related to that boy?",
+        options: ["Brother", "Uncle", "Cousin", "Father"],
+        correctIndex: 3,
+        explanation: "1. Breaking down the statement: 'The only son of my mother'.<br>2. Since Suresh is speaking, his mother's only son must be Suresh himself.<br>3. The statement now simplifies to: 'He is the son of Suresh'.<br>4. Therefore, Suresh is the <strong>Father</strong> of the boy in the photograph."
+      },
+      {
+        id: 6,
+        category: "Logical Reasoning",
+        difficulty: "Easy",
+        question: "Look at this series: 2, 1, 1/2, 1/4, ... What number should come next?",
+        options: ["1/3", "1/8", "2/8", "1/16"],
+        correctIndex: 1,
+        explanation: "1. This is a geometric series where each number is divided by 2 to get the next term.<br>2. 2 / 2 = 1<br>3. 1 / 2 = 1/2<br>4. (1/2) / 2 = 1/4<br>5. Therefore, the next term is (1/4) / 2 = <strong>1/8</strong>."
+      },
+      {
+        id: 7,
+        category: "Verbal Ability",
+        difficulty: "Easy",
+        question: "Identify the synonym of the word 'ABANDON'.",
+        options: ["Keep", "Forsake", "Cherish", "Adopt"],
+        correctIndex: 1,
+        explanation: "1. 'Abandon' means to completely withdraw support or help from, or to leave behind.<br>2. 'Forsake' means to abandon or desert someone or something.<br>3. Thus, 'Forsake' is a direct synonym of 'Abandon'. The other options ('Keep', 'Cherish', 'Adopt') are antonyms or unrelated."
+      },
+      {
+        id: 8,
+        category: "Verbal Ability",
+        difficulty: "Easy",
+        question: "Fill in the blank: 'The candidate was ______ for the post because of his lack of experience.'",
+        options: ["selected", "rejected", "promoted", "suspended"],
+        correctIndex: 1,
+        explanation: "1. The sentence contains a causal connector 'because of'.<br>2. The cause is 'lack of experience', which is a negative attribute for a job recruitment.<br>3. The logical outcome for a candidate with a lack of experience is that they are <strong>rejected</strong>."
+      },
+      {
+        id: 9,
+        category: "Verbal Ability",
+        difficulty: "Easy",
+        question: "Find the correctly spelt word from the options below.",
+        options: ["Recieve", "Receive", "Recive", "Riceive"],
+        correctIndex: 1,
+        explanation: "1. The correct spelling is <strong>Receive</strong>.<br>2. It follows the common English orthography rule: 'I before E except after C' (when the sound is a long 'e'). Since the letters follow 'c', 'e' comes before 'i'."
+      },
+      {
+        id: 10,
+        category: "Verbal Ability",
+        difficulty: "Easy",
+        question: "Identify the antonym of the word 'GIANT'.",
+        options: ["Tiny", "Huge", "Large", "Monster"],
+        correctIndex: 0,
+        explanation: "1. 'Giant' refers to something that is extremely large or colossal.<br>2. An antonym must mean the opposite (extremely small).<br>3. <strong>Tiny</strong> means very small, making it the correct antonym. (Huge, Large, and Monster are synonyms)."
+      },
+
+      // === MEDIUM QUESTIONS (10 to 19) ===
+      {
+        id: 11,
+        category: "Quantitative Aptitude",
+        difficulty: "Medium",
+        question: "The ratio of the present ages of Ram and Shyam is 4:5. After 6 years, the ratio of their ages becomes 5:6. What is the sum of their present ages?",
+        options: ["54 years", "60 years", "45 years", "90 years"],
+        correctIndex: 0,
+        explanation: "1. Let Ram's present age be 4X and Shyam's present age be 5X.<br>2. After 6 years, their ages will be (4X + 6) and (5X + 6).<br>3. According to the problem: (4X + 6) / (5X + 6) = 5/6.<br>4. Cross-multiplying: 6(4X + 6) = 5(5X + 6)  =>  24X + 36 = 25X + 30.<br>5. Solving for X: X = 6.<br>6. Present ages: Ram = 4(6) = 24 years, Shyam = 5(6) = 30 years.<br>7. Sum of present ages = 24 + 30 = <strong>54 years</strong>."
+      },
+      {
+        id: 12,
+        category: "Quantitative Aptitude",
+        difficulty: "Medium",
+        question: "A sum of money at compound interest doubles itself in 15 years. In how many years will it become eight times of itself?",
+        options: ["30 years", "40 years", "45 years", "60 years"],
+        correctIndex: 2,
+        explanation: "1. Under compound interest, a sum grows exponentially: $A = P(1 + R/100)^t$.<br>2. It becomes 2 times (2^1) in 15 years.<br>3. It will become 4 times (2^2) in 15 + 15 = 30 years.<br>4. It will become 8 times (2^3) in 30 + 15 = <strong>45 years</strong>.<br>5. General formula: If $2^1$ takes $T$ years, then $2^n$ takes $n \times T$ years. Here, $8 = 2^3$, so $3 \times 15 = 45$ years."
+      },
+      {
+        id: 13,
+        category: "Quantitative Aptitude",
+        difficulty: "Medium",
+        question: "In how many different ways can the letters of the word 'LEADING' be arranged in such a way that the vowels always come together?",
+        options: ["360 ways", "480 ways", "720 ways", "5040 ways"],
+        correctIndex: 2,
+        explanation: "1. The word 'LEADING' has 7 letters: Consonants (L, D, N, G) and Vowels (E, A, I).<br>2. Since the vowels (E, A, I) must always be together, we treat them as a single entity/block: (EAI).<br>3. Now we arrange the 4 consonants + 1 vowel-block = 5 entities.<br>4. The number of ways to arrange 5 entities is $5! = 120$ ways.<br>5. Inside the vowel-block, the 3 vowels (E, A, I) can arrange themselves in $3! = 6$ ways.<br>6. Total arrangements = $120 \times 6 = <strong>720$ ways</strong>."
+      },
+      {
+        id: 14,
+        category: "Logical Reasoning",
+        difficulty: "Medium",
+        question: "If 'A + B' means A is the brother of B; 'A - B' means A is the sister of B; and 'A × B' means A is the father of B. Which of the following expressions means that C is the son of M?",
+        options: ["M × N - C", "M × C - N", "M + N × C", "M × C + N"],
+        correctIndex: 3,
+        explanation: "1. We need C to be the son of M. This requires:<br>&nbsp;&nbsp;a) M is a parent of C (specifically father in this scheme, or connected via ×).<br>&nbsp;&nbsp;b) C is male (brother state '+').<br>2. Let's analyze option 4: 'M × C + N'<br>&nbsp;&nbsp;- 'M × C' means M is the father of C.<br>&nbsp;&nbsp;- 'C + N' means C is the brother of N (which confirms C is male).<br>3. Since M is the father of C and C is male, C is the <strong>son of M</strong>."
+      },
+      {
+        id: 15,
+        category: "Logical Reasoning",
+        difficulty: "Medium",
+        question: "In a row of 40 students facing North, Kailash is 22nd from the left end. What is his position from the right end of the row?",
+        options: ["18th", "19th", "20th", "21st"],
+        correctIndex: 1,
+        explanation: "1. Total number of students in the row = 40.<br>2. Position of Kailash from the left end = 22.<br>3. Position from the right end = (Total Students - Position from Left) + 1.<br>4. Position = (40 - 22) + 1 = 18 + 1 = <strong>19th</strong>."
+      },
+      {
+        id: 16,
+        category: "Logical Reasoning",
+        difficulty: "Medium",
+        question: "Syllogism - Statements: 'Some papers are pens.' 'All pens are pencils.' Identify the correct conclusion(s).",
+        options: ["Only conclusion I follows", "Only conclusion II follows", "Either I or II follows", "Neither I nor II follows"],
+        correctIndex: 0,
+        explanation: "1. Draw a Venn diagram: 'Some papers are pens' means a partial overlap between Papers and Pens.<br>2. 'All pens are pencils' means the Pens circle is fully inside the Pencils circle.<br>3. Conclusions:<br>&nbsp;&nbsp;- I. 'Some papers are pencils': Yes. The overlap region of Papers and Pens is inside Pencils. This follows.<br>&nbsp;&nbsp;- II. 'All pencils are pens': No. Pencils is the larger container, not all pencils are pens. This does not follow.<br>4. Therefore, <strong>Only conclusion I follows</strong>."
+      },
+      {
+        id: 17,
+        category: "Logical Reasoning",
+        difficulty: "Medium",
+        question: "If in a certain language, MADRAS is coded as NBESBT, how is BOMBAY coded in that code?",
+        options: ["CPNCBX", "CPNCBY", "CPNCBZ", "CPOCBZ"],
+        correctIndex: 2,
+        explanation: "1. Study the coding scheme for MADRAS → NBESBT:<br>&nbsp;&nbsp;M (+1) = N, A (+1) = B, D (+1) = E, R (+1) = S, A (+1) = B, S (+1) = T.<br>2. Each letter is shifted by +1.<br>3. Applying +1 shift to BOMBAY:<br>&nbsp;&nbsp;B (+1) = C, O (+1) = P, M (+1) = N, B (+1) = C, A (+1) = B, Y (+1) = Z.<br>4. The coded word is <strong>CPNCBZ</strong>."
+      },
+      {
+        id: 18,
+        category: "Verbal Ability",
+        difficulty: "Medium",
+        question: "Choose the option that best expresses the meaning of the idiom: 'To spill the beans'.",
+        options: ["To drop something", "To reveal a secret", "To cook food", "To be clumsy"],
+        correctIndex: 1,
+        explanation: "1. The idiom 'to spill the beans' historically means to reveal secret information, often unintentionally or prematurely.<br>2. Therefore, 'To reveal a secret' is the correct meaning."
+      },
+      {
+        id: 19,
+        category: "Verbal Ability",
+        difficulty: "Medium",
+        question: "Fill in the blank: 'Neither the teacher nor the students ______ present in the class.'",
+        options: ["was", "were", "is", "has"],
+        correctIndex: 1,
+        explanation: "1. When two subjects (one singular, one plural) are joined by 'neither... nor', the verb must agree with the subject closest to it.<br>2. The subject closest to the blank is 'the students' (plural noun).<br>3. Among the options, the plural past verb <strong>were</strong> fits grammatically. ('was', 'is', 'has' are singular)."
+      },
+      {
+        id: 20,
+        category: "Verbal Ability",
+        difficulty: "Medium",
+        question: "Sentence correction: 'He has been working in this company since five years.'",
+        options: ["No correction needed", "for five years", "from five years", "during five years"],
+        correctIndex: 1,
+        explanation: "1. In English grammar, 'since' is used to denote a specific starting point in time (e.g., since 2018, since Monday).<br>2. 'For' is used to denote a period/duration of time (e.g., for five years, for two hours).<br>3. 'Five years' is a duration, so 'since' must be replaced by <strong>for five years</strong>."
+      },
+
+      // === HARD QUESTIONS (20 to 29) ===
+      {
+        id: 21,
+        category: "Quantitative Aptitude",
+        difficulty: "Hard",
+        question: "Three pipes A, B, and C can fill an empty tank to full in 30 mins, 20 mins, and 10 mins respectively. When the tank is empty, all three pipes are opened together. Pipes A, B, and C discharge chemical solutions P, Q, and R respectively. What is the proportion of solution R in the tank liquid after 3 minutes?",
+        options: ["5/11", "6/11", "7/11", "8/11"],
+        correctIndex: 1,
+        explanation: "1. Calculate rates of filling for each pipe:<br>&nbsp;&nbsp;- Rate of A = 1/30 of tank/min<br>&nbsp;&nbsp;- Rate of B = 1/20 of tank/min<br>&nbsp;&nbsp;- Rate of C = 1/10 of tank/min<br>2. Total filling rate of all pipes = 1/30 + 1/20 + 1/10 = (2 + 3 + 6) / 60 = 11/60 of tank/min.<br>3. After 3 minutes, the total volume filled = 3 × 11/60 = 33/60 of the tank.<br>4. The amount of chemical R discharged by Pipe C in 3 minutes = 3 × 1/10 = 3/10 = 18/60 of the tank.<br>5. Proportion of R in the mixture = Volume of R / Total Volume = (18/60) / (33/60) = 18/33 = <strong>6/11</strong>."
+      },
+      {
+        id: 22,
+        category: "Quantitative Aptitude",
+        difficulty: "Hard",
+        question: "If log 2 = 0.30103 and log 3 = 0.47712, what is the number of digits in $6^{20}$?",
+        options: ["15 digits", "16 digits", "17 digits", "18 digits"],
+        correctIndex: 1,
+        explanation: "1. Let $X = 6^{20}$. Take log on both sides: $\\log X = \\log(6^{20}) = 20 \\times \\log(6)$.<br>2. Expand $\\log(6) = \\log(2 \\times 3) = \\log 2 + \\log 3$.<br>3. Substitute the values: $\\log 6 = 0.30103 + 0.47712 = 0.77815$.<br>4. $\\log X = 20 \\times 0.77815 = 15.563$.<br>5. The characteristic of $\\log X$ is 15.<br>6. The number of digits in $X$ is Characteristic + 1 = 15 + 1 = <strong>16 digits</strong>."
+      },
+      {
+        id: 23,
+        category: "Quantitative Aptitude",
+        difficulty: "Hard",
+        question: "A bag contains 4 white, 5 red, and 6 blue balls. Three balls are drawn at random. What is the probability that all three drawn balls are red?",
+        options: ["1/22", "2/91", "3/22", "2/77"],
+        correctIndex: 1,
+        explanation: "1. Total number of balls = 4 + 5 + 6 = 15.<br>2. Number of ways to choose 3 balls from 15 is $^{15}C_3 = (15 × 14 × 13) / (3 × 2 × 1) = 455$.<br>3. Number of ways to choose 3 red balls from 5 is $^5C_3 = ^5C_2 = (5 × 4) / 2 = 10$.<br>4. Probability = Ways to choose 3 red / Total ways to choose 3 = 10 / 455 = <strong>2/91</strong>."
+      },
+      {
+        id: 24,
+        category: "Quantitative Aptitude",
+        difficulty: "Hard",
+        question: "A man can row 18 km/h in still water. It takes him thrice as long to row upstream as it does to row downstream. Find the speed of the stream.",
+        options: ["9 km/h", "6 km/h", "12 km/h", "8 km/h"],
+        correctIndex: 0,
+        explanation: "1. Let the speed of the stream be $S$ km/h.<br>2. Downstream speed = $18 + S$. Upstream speed = $18 - S$.<br>3. Since distance is equal, Time is inversely proportional to Speed:<br>&nbsp;&nbsp;Time(up) = 3 × Time(down)  =>  Speed(down) = 3 × Speed(up).<br>4. $18 + S = 3(18 - S)$<br>5. $18 + S = 54 - 3S$<br>6. $4S = 36  =>  S = <strong>9$ km/h</strong>."
+      },
+      {
+        id: 25,
+        category: "Logical Reasoning",
+        difficulty: "Hard",
+        question: "Five girls are sitting on a bench for a photo. Seema is to the left of Reena. Bindu is to the right of Reena. Mary is to the right of Reena. Reeta is between Reena and Mary. Who is sitting in the exact middle of the photograph?",
+        options: ["Reena", "Bindu", "Mary", "Reeta"],
+        correctIndex: 3,
+        explanation: "1. Let's place the girls based on the clues:<br>&nbsp;&nbsp;- Seema is to the left of Reena: S - R<br>&nbsp;&nbsp;- Bindu is to the right of Reena: R ... B<br>&nbsp;&nbsp;- Mary is to the right of Reena: R ... M<br>&nbsp;&nbsp;- Reeta is between Reena and Mary: R - Reeta - M.<br>2. Combine these sequences: Seema is left of Reena, so we get S - R - Reeta - Mary.<br>3. Since Bindu is also to the right of Reena, and Reeta is directly between R and M, the arrangement is: S - R - Reeta - M - B.<br>4. The 5 positions are: [1: Seema, 2: Reena, 3: Reeta, 4: Mary, 5: Bindu].<br>5. The person in the exact middle (position 3) is <strong>Reeta</strong>."
+      },
+      {
+        id: 26,
+        category: "Logical Reasoning",
+        difficulty: "Hard",
+        question: "Find the missing number in the sequence: 10, 18, 34, ?, 130, 258.",
+        options: ["66", "68", "70", "72"],
+        correctIndex: 0,
+        explanation: "1. Look at the differences between consecutive terms:<br>&nbsp;&nbsp;18 - 10 = 8<br>&nbsp;&nbsp;34 - 18 = 16 (which is 8 × 2)<br>2. If the trend of doubling differences continues:<br>&nbsp;&nbsp;The next difference should be 16 × 2 = 32.<br>&nbsp;&nbsp;So, the missing term = 34 + 32 = <strong>66</strong>.<br>3. Let's verify with the rest of the sequence:<br>&nbsp;&nbsp;Next difference = 32 × 2 = 64.  66 + 64 = 130 (Correct).<br>&nbsp;&nbsp;Next difference = 64 × 2 = 128. 130 + 128 = 258 (Correct)."
+      },
+      {
+        id: 27,
+        category: "Logical Reasoning",
+        difficulty: "Hard",
+        question: "One morning after sunrise, Vikram and Shailesh were standing in a lawn with their backs towards each other. Vikram's shadow fell exactly towards his left hand side. Which direction was Shailesh facing?",
+        options: ["East", "West", "North", "South"],
+        correctIndex: 3,
+        explanation: "1. In the morning, the Sun is in the East. Therefore, all shadows fall to the West.<br>2. Vikram's shadow falls to his left. This means Vikram's left hand is pointing West.<br>3. If left is West, Vikram must be facing North (so that right is East, front is North, back is South).<br>4. Vikram and Shailesh are standing back-to-back.<br>5. Since Vikram faces North, Shailesh must be facing <strong>South</strong>."
+      },
+      {
+        id: 28,
+        category: "Verbal Ability",
+        difficulty: "Hard",
+        question: "Choose the word that is closest in meaning to the word 'EPHEMERAL'.",
+        options: ["Eternal", "Short-lived", "Mythical", "Beautiful"],
+        correctIndex: 1,
+        explanation: "1. 'Ephemeral' means lasting for a very short time.<br>2. 'Short-lived' is a direct synonym.<br>3. 'Eternal' is an antonym, while 'Mythical' and 'Beautiful' are semantically unrelated."
+      },
+      {
+        id: 29,
+        category: "Verbal Ability",
+        difficulty: "Hard",
+        question: "Fill in the blank: 'The manager was so ______ in his explanations that everyone understood the project details immediately.'",
+        options: ["ambiguous", "lucid", "verbose", "opaque"],
+        correctIndex: 1,
+        explanation: "1. The sentence shows a result: 'everyone understood immediately'.<br>2. This implies the manager's explanations were extremely clear and easy to follow.<br>3. <strong>Lucid</strong> means expressed clearly or easy to understand, making it the perfect word.<br>4. 'Ambiguous' (unclear), 'Verbose' (too wordy), and 'Opaque' (hard to understand) contradict the context."
+      },
+      {
+        id: 30,
+        category: "Verbal Ability",
+        difficulty: "Hard",
+        question: "Identify the antonym of the word 'CAPRICIOUS'.",
+        options: ["Unpredictable", "Fickle", "Steadfast", "Humorous"],
+        correctIndex: 2,
+        explanation: "1. 'Capricious' means given to sudden and unaccountable changes of mood or behavior; erratic and unpredictable.<br>2. An antonym must mean stable, reliable, and constant.<br>3. <strong>Steadfast</strong> means dutifully firm and unwavering, which is the direct opposite of capricious.<br>4. (Unpredictable and Fickle are synonyms of capricious)."
+      }
+    ];
+
+    // ----------------------------------------------------
+    // STATE VARIABLES
+    // ----------------------------------------------------
+    let selectedCompany = 'tcs';
+    let candidateName = 'John Doe';
+    let testQuestions = []; // Active 15 questions
+    
+    // User responses and palette status arrays (0-14 indexes)
+    let userAnswers = Array(15).fill(null);
+    let visitedQuestions = Array(15).fill(false);
+    let markedQuestions = Array(15).fill(false);
+    
+    let currentQuestionIndex = 0;
+    let timeRemaining = 600; // 10 minutes in seconds
+    let timerInterval = null;
+    let testSubmitted = false;
+
+    // Company specific settings
+    const COMPANY_PROFILES = {
+      tcs: {
+        themeClass: 'theme-tcs',
+        portalTitle: 'TCS iON NQT Portal',
+        subtitle: 'National Qualifier Test Simulator',
+        logoText: 'TCS',
+        badgeText: 'TCS iON Theme',
+        avatarText: 'TC'
+      },
+      infosys: {
+        themeClass: 'theme-infosys',
+        portalTitle: 'Infosys Recruitment Platform',
+        subtitle: 'InfyTQ & Systems Engineer Simulator',
+        logoText: 'INF',
+        badgeText: 'Infosys Theme',
+        avatarText: 'IN'
+      },
+      wipro: {
+        themeClass: 'theme-wipro',
+        portalTitle: 'Wipro Elite Assessment',
+        subtitle: 'National Talent Hunt (NLTH) Simulator',
+        logoText: 'WIP',
+        badgeText: 'Wipro Theme',
+        avatarText: 'WP'
+      },
+      accenture: {
+        themeClass: 'theme-accenture',
+        portalTitle: 'Accenture Cognitive Portal',
+        subtitle: 'ASE/FSE Placement Assessment',
+        logoText: 'ACN',
+        badgeText: 'Accenture Theme',
+        avatarText: 'AC'
+      },
+      capgemini: {
+        themeClass: 'theme-capgemini',
+        portalTitle: 'Capgemini L&D Exam Portal',
+        subtitle: 'Joint Entrance Assessment Simulator',
+        logoText: 'CAP',
+        badgeText: 'Capgemini Theme',
+        avatarText: 'CG'
+      },
+      cognizant: {
+        themeClass: 'theme-cognizant',
+        portalTitle: 'Cognizant GenC Portal',
+        subtitle: 'Aptitude & Technical Placement Test',
+        logoText: 'CTS',
+        badgeText: 'Cognizant Theme',
+        avatarText: 'CZ'
+      }
+    };
+
+    // ----------------------------------------------------
+    // INITIALIZATION & UTILITIES
+    // ----------------------------------------------------
+    
+    // Shuffle helper (Fisher-Yates)
+    function shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    // Pick 5 Easy, 5 Medium, 5 Hard, and shuffle them
+    function generateQuestionSet() {
+      const easyPool = QUESTION_POOL.filter(q => q.difficulty === 'Easy');
+      const mediumPool = QUESTION_POOL.filter(q => q.difficulty === 'Medium');
+      const hardPool = QUESTION_POOL.filter(q => q.difficulty === 'Hard');
+
+      // Shuffle pools
+      shuffleArray(easyPool);
+      shuffleArray(mediumPool);
+      shuffleArray(hardPool);
+
+      // Select 5 from each
+      const selectedEasy = easyPool.slice(0, 5);
+      const selectedMedium = mediumPool.slice(0, 5);
+      const selectedHard = hardPool.slice(0, 5);
+
+      // Combine and shuffle the final 15
+      const finalSet = [...selectedEasy, ...selectedMedium, ...selectedHard];
+      shuffleArray(finalSet);
+      
+      return finalSet;
+    }
+
+    // Theme selector on main page
+    function selectCompanyTheme(companyKey) {
+      selectedCompany = companyKey;
+      
+      // Update selected card styling
+      document.querySelectorAll('.company-card').forEach(card => {
+        card.classList.remove('selected');
+      });
+      document.querySelector(`.comp-${companyKey.substring(0, 4)}`).classList.add('selected');
+
+      // Update instructions page preview badge
+      const profile = COMPANY_PROFILES[companyKey];
+      const badge = document.getElementById('setup-company-badge');
+      badge.innerText = `${profile.portalTitle} Active`;
+      
+      // Swap out the body theme temporarily so background gradient updates on preview
+      document.body.className = profile.themeClass;
+    }
+
+    // ----------------------------------------------------
+    // EXAM LIFE CYCLE
+    // ----------------------------------------------------
+
+    function startAssessment() {
+      // 1. Get name
+      const nameInput = document.getElementById('candidate-name-input');
+      candidateName = nameInput.value.trim() || 'Candidate';
+      document.getElementById('candidate-name-display').innerText = candidateName;
+
+      // Set initials in avatar
+      const profile = COMPANY_PROFILES[selectedCompany];
+      const avatar = document.getElementById('candidate-avatar');
+      avatar.innerText = profile.avatarText;
+      avatar.style.background = 'linear-gradient(135deg, var(--primary), var(--secondary))';
+
+      // 2. Setup company branding in header
+      document.body.className = profile.themeClass;
+      document.getElementById('header-logo-badge').innerText = profile.logoText;
+      document.getElementById('header-portal-title').innerText = profile.portalTitle;
+      document.getElementById('header-portal-subtitle').innerText = profile.subtitle;
+
+      // 3. Generate randomized question set
+      testQuestions = generateQuestionSet();
+
+      // 4. Reset states
+      userAnswers = Array(15).fill(null);
+      visitedQuestions = Array(15).fill(false);
+      markedQuestions = Array(15).fill(false);
+      currentQuestionIndex = 0;
+      timeRemaining = 600; // 10 minutes
+      testSubmitted = false;
+
+      // 5. Initialize layout components
+      visitedQuestions[0] = true; // Mark first question visited
+      renderPalette();
+      showQuestion(0);
+      updateProgressStats();
+
+      // Show Timer
+      const timerContainer = document.getElementById('exam-timer-container');
+      timerContainer.classList.remove('hidden');
+      timerContainer.className = "timer-badge normal"; // reset class
+      document.getElementById('exam-timer').innerText = "10:00";
+
+      // 6. Start Timer Interval
+      if(timerInterval) clearInterval(timerInterval);
+      timerInterval = setInterval(updateTimerTick, 1000);
+
+      // 7. Transition Stage Screen
+      document.getElementById('setup-stage').classList.remove('active');
+      document.getElementById('exam-stage').classList.add('active');
+    }
+
+    function updateTimerTick() {
+      if(timeRemaining <= 0) {
+        clearInterval(timerInterval);
+        autoSubmitTest();
+        return;
+      }
+
+      timeRemaining--;
+
+      // Format time
+      const mins = Math.floor(timeRemaining / 60);
+      const secs = timeRemaining % 60;
+      const timeStr = `${mins < 10 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}`;
+      
+      const timerElement = document.getElementById('exam-timer');
+      const timerContainer = document.getElementById('exam-timer-container');
+      timerElement.innerText = timeStr;
+
+      // Warning when time is less than 2 minutes (120s)
+      if(timeRemaining < 120) {
+        timerContainer.className = "timer-badge warning";
+      } else {
+        timerContainer.className = "timer-badge normal";
+      }
+    }
+
+    // ----------------------------------------------------
+    // QUESTION DISPLAY & NAVIGATION
+    // ----------------------------------------------------
+
+    function showQuestion(index) {
+      currentQuestionIndex = index;
+      const question = testQuestions[index];
+      visitedQuestions[index] = true;
+
+      // Loading fade animation
+      const contentWrapper = document.getElementById('question-content-wrapper');
+      contentWrapper.style.opacity = '0';
+      
+      setTimeout(() => {
+        // Update index titles
+        document.getElementById('question-index-title').innerText = `Question ${index + 1} of 15`;
+        
+        // Update badges
+        const diffBadge = document.getElementById('question-difficulty-badge');
+        diffBadge.innerText = question.difficulty;
+        diffBadge.className = `badge-tag difficulty-${question.difficulty.toLowerCase()}`;
+        
+        const catBadge = document.getElementById('question-category-badge');
+        catBadge.innerText = question.category;
+
+        // Prompt
+        document.getElementById('question-prompt-text').innerText = question.question;
+
+        // Options
+        const optionsContainer = document.getElementById('question-options-container');
+        optionsContainer.innerHTML = '';
+        
+        const alphabet = ['A', 'B', 'C', 'D'];
+        question.options.forEach((optText, optIdx) => {
+          const isSelected = userAnswers[index] === optIdx;
+          
+          const card = document.createElement('div');
+          card.className = `option-card ${isSelected ? 'selected' : ''}`;
+          card.onclick = () => selectOption(optIdx);
+
+          card.innerHTML = `
+            <input type="radio" name="mcq-option" class="option-radio" value="${optIdx}" ${isSelected ? 'checked' : ''}>
+            <div class="option-letter">${alphabet[optIdx]}</div>
+            <div class="option-text">${optText}</div>
+          `;
+          optionsContainer.appendChild(card);
+        });
+
+        // Toggle buttons states
+        const prevBtn = document.getElementById('prev-question-btn');
+        const nextBtn = document.getElementById('next-question-btn');
+        
+        if(index === 0) {
+          prevBtn.disabled = true;
+          prevBtn.style.opacity = '0.3';
+        } else {
+          prevBtn.disabled = false;
+          prevBtn.style.opacity = '1';
+        }
+
+        if(index === 14) {
+          nextBtn.innerHTML = `Save & Review <i class="fa-solid fa-flag-checkered"></i>`;
+          nextBtn.className = "btn btn-primary";
+          nextBtn.style.background = 'linear-gradient(135deg, var(--secondary), #ec4899)';
+        } else {
+          nextBtn.innerHTML = `Save & Next <i class="fa-solid fa-chevron-right"></i>`;
+          nextBtn.className = "btn btn-primary";
+          nextBtn.style.background = ''; // restore theme default gradient
+        }
+
+        // Palette Highlight Active
+        document.querySelectorAll('.palette-btn').forEach(btn => {
+          btn.classList.remove('active-q');
+        });
+        const activePaletteBtn = document.getElementById(`palette-btn-${index}`);
+        if(activePaletteBtn) activePaletteBtn.classList.add('active-q');
+
+        // Render palette colors
+        renderPalette();
+        updateProgressStats();
+        
+        contentWrapper.style.opacity = '1';
+      }, 100);
+    }
+
+    function selectOption(optionIndex) {
+      userAnswers[currentQuestionIndex] = optionIndex;
+      
+      // Update visual selection directly
+      document.querySelectorAll('.option-card').forEach((card, idx) => {
+        if(idx === optionIndex) {
+          card.classList.add('selected');
+          card.querySelector('input').checked = true;
+        } else {
+          card.classList.remove('selected');
+        }
+      });
+
+      renderPalette();
+      updateProgressStats();
+    }
+
+    // ----------------------------------------------------
+    // ACTIONS BAR FUNCTIONS
+    // ----------------------------------------------------
+    function clearActiveResponse() {
+      userAnswers[currentQuestionIndex] = null;
+      document.querySelectorAll('.option-card').forEach(card => {
+        card.classList.remove('selected');
+        const input = card.querySelector('input');
+        if(input) input.checked = false;
+      });
+
+      renderPalette();
+      updateProgressStats();
+    }
+
+    function toggleActiveMarkForReview() {
+      markedQuestions[currentQuestionIndex] = !markedQuestions[currentQuestionIndex];
+      
+      renderPalette();
+      updateProgressStats();
+    }
+
+    function goToNextQuestion() {
+      if(currentQuestionIndex < 14) {
+        showQuestion(currentQuestionIndex + 1);
+      } else {
+        // Last question: Save & Next prompts submission modal
+        openSubmitModal();
+      }
+    }
+
+    function goToPrevQuestion() {
+      if(currentQuestionIndex > 0) {
+        showQuestion(currentQuestionIndex - 1);
+      }
+    }
+
+    // ----------------------------------------------------
+    // PALETTE GRID
+    // ----------------------------------------------------
+
+    function renderPalette() {
+      const container = document.getElementById('palette-grid-container');
+      if(!container) return;
+
+      container.innerHTML = '';
+      
+      for(let i = 0; i < 15; i++) {
+        const btn = document.createElement('button');
+        btn.id = `palette-btn-${i}`;
+        btn.innerText = i + 1;
+        
+        // Determine state class
+        let stateClass = 'palette-not-visited';
+        const isVisited = visitedQuestions[i];
+        const isAnswered = userAnswers[i] !== null;
+        const isMarked = markedQuestions[i];
+
+        if(isVisited) {
+          if(isAnswered && isMarked) {
+            stateClass = 'palette-marked-answered';
+          } else if(isAnswered) {
+            stateClass = 'palette-answered';
+          } else if(isMarked) {
+            stateClass = 'palette-marked';
+          } else {
+            stateClass = 'palette-not-answered';
+          }
+        }
+
+        btn.className = `palette-btn ${stateClass} ${i === currentQuestionIndex ? 'active-q' : ''}`;
+        btn.onclick = () => showQuestion(i);
+        container.appendChild(btn);
+      }
+    }
+
+    function updateProgressStats() {
+      let answeredCount = 0;
+      let markedCount = 0;
+      
+      for(let i = 0; i < 15; i++) {
+        if(userAnswers[i] !== null) answeredCount++;
+        if(markedQuestions[i]) markedCount++;
+      }
+
+      const unattemptedCount = 15 - answeredCount;
+
+      // Update counters
+      document.getElementById('stat-answered-count').innerText = answeredCount;
+      document.getElementById('stat-marked-count').innerText = markedCount;
+      document.getElementById('stat-unattempted-count').innerText = unattemptedCount;
+
+      // Update progress bar percentage
+      const pct = Math.round((answeredCount / 15) * 100);
+      document.getElementById('progress-percentage-text').innerText = `${pct}% Attempted`;
+      document.getElementById('progress-bar-fill').style.width = `${pct}%`;
+    }
+
+    // ----------------------------------------------------
+    // SUBMISSION & SCORE CALCULATION
+    // ----------------------------------------------------
+
+    function openSubmitModal() {
+      // Get counts
+      let answeredCount = 0;
+      let markedCount = 0;
+      
+      for(let i = 0; i < 15; i++) {
+        if(userAnswers[i] !== null) answeredCount++;
+        if(markedQuestions[i]) markedCount++;
+      }
+      
+      const unattempted = 15 - answeredCount;
+
+      document.getElementById('modal-stat-ans').innerText = answeredCount;
+      document.getElementById('modal-stat-marked').innerText = markedCount;
+      document.getElementById('modal-stat-unans').innerText = unattempted;
+
+      document.getElementById('submit-confirm-modal').classList.add('active');
+    }
+
+    function closeSubmitModal() {
+      document.getElementById('submit-confirm-modal').classList.remove('active');
+    }
+
+    function confirmSubmitTest() {
+      closeSubmitModal();
+      clearInterval(timerInterval);
+      submitTestResults();
+    }
+
+    function autoSubmitTest() {
+      // Triggered by timer ending
+      clearInterval(timerInterval);
+      alert("Time is up! Your answers will be submitted automatically.");
+      submitTestResults();
+    }
+
+    function submitTestResults() {
+      testSubmitted = true;
+      
+      // Calculate scores
+      let score = 0;
+      let correctAnswersCount = 0;
+      let incorrectAnswersCount = 0;
+      let unattemptedAnswersCount = 0;
+
+      testQuestions.forEach((q, idx) => {
+        const userAns = userAnswers[idx];
+        if(userAns === null) {
+          unattemptedAnswersCount++;
+        } else if(userAns === q.correctIndex) {
+          correctAnswersCount++;
+          score++;
+        } else {
+          incorrectAnswersCount++;
+        }
+      });
+
+      const percentage = Math.round((score / 15) * 100);
+
+      // Determine feedback tier
+      let feedbackLabel = "Needs Improvement";
+      let feedbackText = "You scored below 50%. Keep practicing! Revise the solutions below to understand the key principles.";
+      let labelClass = "perf-poor";
+
+      if (percentage >= 90) {
+        feedbackLabel = "Excellent";
+        feedbackText = "Outstanding performance! You show a strong grasp of aptitude, logical, and verbal concepts. You are ready for top corporate recruitment tests.";
+        labelClass = "perf-excellent";
+      } else if (percentage >= 75) {
+        feedbackLabel = "Very Good";
+        feedbackText = "Great effort! You did really well and showed high analytical capabilities. Minor practice on hard questions will make your profile airtight.";
+        labelClass = "perf-verygood";
+      } else if (percentage >= 50) {
+        feedbackLabel = "Good";
+        feedbackText = "Decent score. You have a solid foundation but missed some logical and quantitative marks. Go through the explanations to patch your weaknesses.";
+        labelClass = "perf-good";
+      }
+
+      // Update Result UI fields
+      document.getElementById('score-percentage').innerText = `${percentage}%`;
+      document.getElementById('score-fraction').innerText = `${score} / 15 Marks`;
+      
+      const labelElement = document.getElementById('performance-label-text');
+      labelElement.innerText = feedbackLabel;
+      labelElement.className = `performance-label ${labelClass}`;
+
+      document.getElementById('performance-feedback-text').innerHTML = feedbackText;
+
+      document.getElementById('result-correct-count').innerText = correctAnswersCount;
+      document.getElementById('result-incorrect-count').innerText = incorrectAnswersCount;
+      document.getElementById('result-unattempted-count').innerText = unattemptedAnswersCount;
+
+      // SVG Circle Gauge animation
+      const fillCircle = document.getElementById('score-gauge-fill');
+      const offset = 528 - (528 * percentage) / 100;
+      fillCircle.style.strokeDashoffset = offset;
+
+      // Populate Detailed solutions
+      populateSolutionsAnalysis();
+
+      // Hide timer badge in header
+      document.getElementById('exam-timer-container').classList.add('hidden');
+
+      // Transition stages
+      document.getElementById('exam-stage').classList.remove('active');
+      document.getElementById('result-stage').classList.add('active');
+    }
+
+    // ----------------------------------------------------
+    // DETAILED EXPLANATION PANEL POPULATOR
+    // ----------------------------------------------------
+
+    function populateSolutionsAnalysis() {
+      const container = document.getElementById('solutions-list-container');
+      container.innerHTML = '';
+      
+      const alphabet = ['A', 'B', 'C', 'D'];
+
+      testQuestions.forEach((q, idx) => {
+        const userAns = userAnswers[idx];
+        const isCorrect = userAns === q.correctIndex;
+        
+        let statusClass = 'unattempted-ans';
+        let statusIcon = '<i class="fa-solid fa-circle-minus"></i> Unattempted';
+        
+        if (userAns !== null) {
+          if (isCorrect) {
+            statusClass = 'correct-ans';
+            statusIcon = '<i class="fa-solid fa-circle-check"></i> Correct';
+          } else {
+            statusClass = 'incorrect-ans';
+            statusIcon = '<i class="fa-solid fa-circle-xmark"></i> Incorrect';
+          }
+        }
+
+        const item = document.createElement('div');
+        item.className = `solution-item ${statusClass}`;
+        item.id = `solution-item-${idx}`;
+
+        item.innerHTML = `
+          <div class="solution-header" onclick="toggleSolutionExpand(${idx})">
+            <div class="solution-header-info">
+              <span class="solution-number">Q${idx + 1}</span>
+              <span class="solution-status-icon">${statusIcon}</span>
+              <span class="solution-q-preview">${q.question.substring(0, 75)}...</span>
+            </div>
+            <div class="solution-expand-icon"><i class="fa-solid fa-chevron-down"></i></div>
+          </div>
+          
+          <div class="solution-body">
+            <div class="q-text">${q.question}</div>
+            
+            <div class="solution-options-list">
+              ${q.options.map((optText, optIdx) => {
+                let cardClass = '';
+                if(optIdx === q.correctIndex) {
+                  cardClass = 'opt-correct';
+                } else if(optIdx === userAns) {
+                  cardClass = 'opt-user-wrong';
+                }
+                
+                return `
+                  <div class="solution-opt ${cardClass}">
+                    <div class="solution-opt-letter">${alphabet[optIdx]}</div>
+                    <div>${optText}</div>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+
+            <div class="explanation-box">
+              <h5><i class="fa-solid fa-chalkboard-user"></i> Detailed Solution</h5>
+              <p>${q.explanation}</p>
+            </div>
+          </div>
+        `;
+
+        container.appendChild(item);
+      });
+    }
+
+    function toggleSolutionExpand(index) {
+      const item = document.getElementById(`solution-item-${index}`);
+      if(item) {
+        item.classList.toggle('expanded');
+      }
+    }
+
+    function restartAssessment() {
+      // Go back to instructions page
+      document.getElementById('result-stage').classList.remove('active');
+      document.getElementById('setup-stage').classList.add('active');
+      
+      // Reset variables
+      if(timerInterval) clearInterval(timerInterval);
+      document.getElementById('exam-timer-container').classList.add('hidden');
+    }
+
+  </script>
+</body>
+</html>

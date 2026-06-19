@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Java AI Mock Interview</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+    
+    body {
+      min-height: 100vh;
+      color: #eef2ff;
+      background: #070a10;
+      padding: 42px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        linear-gradient(90deg, rgba(7, 10, 16, 0.76), rgba(7, 10, 16, 0.48)),
+        url("assets/hr-interview-room.svg") center / cover no-repeat;
+      z-index: -2;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 8, 15, 0.34);
+      backdrop-filter: blur(1.5px);
+      z-index: -1;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      align-items: flex-start;
+      margin-bottom: 28px;
+      position: relative;
+      z-index: 1;
+    }
+
+    h1 {
+      font-size: clamp(36px, 5vw, 58px);
+      line-height: 1.05;
+      margin-bottom: 14px;
+    }
+
+    .subtitle {
+      color: #a9b7d8;
+      font-size: 24px;
+    }
+
+    .badges {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      padding-top: 48px;
+    }
+
+    .badge {
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 34px;
+      padding: 18px 24px;
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.55fr) minmax(360px, 0.95fr);
+      gap: 26px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .panel {
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      border-radius: 34px;
+      background: rgba(10, 15, 29, 0.82);
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.34);
+      backdrop-filter: blur(12px);
+      overflow: hidden;
+    }
+
+    .left-top {
+      padding: 32px 34px;
+    }
+
+    .profile {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      margin-bottom: 26px;
+    }
+
+    .bot {
+      width: 126px;
+      height: 126px;
+      border-radius: 32px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, #7468ff, #21c9df);
+      box-shadow: 0 0 0 14px rgba(255, 255, 255, 0.04);
+      position: relative;
+    }
+
+    .bot::before,
+    .bot::after {
+      content: "";
+      position: absolute;
+      top: 42px;
+      width: 16px;
+      height: 16px;
+      background: #f3f7ff;
+      border-radius: 50%;
+    }
+
+    .bot::before {
+      left: 36px;
+    }
+
+    .bot::after {
+      right: 36px;
+    }
+
+    .mouth {
+      width: 72px;
+      height: 18px;
+      margin-top: 46px;
+      background: #eaf3ff;
+      border-radius: 99px;
+    }
+
+    .profile h2 {
+      font-size: 26px;
+      margin-bottom: 8px;
+    }
+
+    .muted {
+      color: #a9b7d8;
+      font-size: 23px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+    }
+
+    .stat,
+    .side-stat {
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.04);
+      padding: 24px;
+      min-height: 108px;
+    }
+
+    .label {
+      color: #9fb0d1;
+      font-size: 20px;
+      margin-bottom: 14px;
+    }
+
+    .value {
+      font-size: 24px;
+      font-weight: 800;
+    }
+
+    .conversation {
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 34px;
+    }
+
+    .message {
+      border-left: 5px solid #7c5cff;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.045);
+      padding: 26px 28px;
+      font-size: 24px;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    .question-card {
+      border-radius: 28px;
+      background: rgba(21, 31, 57, 0.88);
+      padding: 42px 28px;
+      min-height: 190px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 28px;
+    }
+
+    .question-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      font-size: 20px;
+    }
+
+    #questionText {
+      font-size: 28px;
+      line-height: 1.35;
+    }
+
+    .right {
+      padding: 32px;
+    }
+
+    .side-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-bottom: 24px;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 284px;
+      resize: vertical;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      outline: none;
+      border-radius: 24px;
+      background: #050916;
+      color: #eef2ff;
+      font-size: 22px;
+      line-height: 1.5;
+      padding: 28px;
+      margin-bottom: 22px;
+    }
+
+    textarea:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: 0;
+      border-radius: 18px;
+      padding: 16px 28px;
+      color: white;
+      background: #7c5cff;
+      font-size: 20px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform 0.15s ease, background 0.15s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      background: #6b4cff;
+    }
+
+    button.secondary {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .feedback {
+      margin-top: 22px;
+      color: #cbd5f5;
+      font-size: 20px;
+      line-height: 1.5;
+      min-height: 32px;
+    }
+
+    @media (max-width: 1100px) {
+      body {
+        padding: 24px;
+      }
+
+      .topbar,
+      .layout {
+        display: block;
+      }
+
+      .badges {
+        justify-content: flex-start;
+        padding-top: 24px;
+        margin-bottom: 24px;
+      }
+
+      .panel {
+        margin-bottom: 24px;
+      }
+
+      .stats,
+      .side-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 650px) {
+      .stats,
+      .side-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .profile {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .badge,
+      .message,
+      #questionText {
+        font-size: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <h1>HR AI Mock Interview</h1>
+      <p class="subtitle">A placement interview preparation portal with a recruiter-style AI interviewer.</p>
+    </div>
+    <div class="badges">
+      <div class="badge" id="timerBadge">Timer 30:00</div>
+      <div class="badge" id="questionBadge">Question 0/10</div>
+      <div class="badge">AI API: Standby</div>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="panel">
+      <div class="left-top">
+        <div class="profile">
+          <div class="bot" aria-hidden="true"><div class="mouth"></div></div>
+          <div>
+            <h2>Sarah Wilson
+Senior HR Manager
+8+ Years Experience</h2>
+            <p class="muted" id="interviewerStatus">Waiting for candidate greeting</p>
+          </div>
+        </div>
+
+        <div class="stats">
+          <div class="stat">
+            <div class="label">HR</div>
+            <div class="value">Interview</div>
+          </div>
+          <div class="stat">
+            <div class="label">Progress</div>
+            <div class="value" id="progressValue">0%</div>
+          </div>
+          <div class="stat">
+            <div class="label">Difficulty</div>
+            <div class="value" id="difficultyValue">Easy</div>
+          </div>
+          <div class="stat">
+            <div class="label">Question</div>
+            <div class="value" id="questionValue">Not started</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="conversation">
+        <div class="message" id="introMessage">
+          Good morning. Please take a seat. Welcome to the Java AI Mock Interview. Click Start Interview when you are ready, and I will begin with the first question.
+        </div>
+
+        <div class="question-card">
+          <div class="question-meta">
+            <span id="topicValue">Java Basics</span>
+            <span id="questionStatus">Ready to begin</span>
+          </div>
+          <p id="questionText">Click Start Interview to begin.</p>
+        </div>
+      </div>
+    </section>
+
+    <aside class="panel right">
+      <div class="side-grid">
+        <div class="side-stat">
+          <div class="label">Timer</div>
+          <div class="value" id="timerValue">30:00</div>
+        </div>
+        <div class="side-stat">
+          <div class="label">Current Question</div>
+          <div class="value" id="currentQuestionValue">0 / 10</div>
+        </div>
+        <div class="side-stat">
+          <div class="label">Correctness</div>
+          <div class="value" id="correctnessValue">-</div>
+        </div>
+        <div class="side-stat">
+          <div class="label">Feedback Status</div>
+          <div class="value" id="feedbackStatus">Ready to begin</div>
+        </div>
+      </div>
+
+      <textarea id="answerInput" placeholder="Type your answer here after the question appears." disabled></textarea>
+
+      <div class="actions">
+        <button id="startButton">Start Interview</button>
+        <button id="speakButton" class="secondary" disabled>Speak Question</button>
+        <button id="micButton" class="secondary" disabled>Start Mic</button>
+        <button id="stopMicButton" class="secondary" disabled>Stop Mic</button>
+        <button id="submitButton" class="secondary" disabled>Submit Answer</button>
+        <button id="nextButton" class="secondary" disabled>Next Question</button>
+      </div>
+
+      <div class="feedback" id="feedbackText"></div>
+    </aside>
+  </main>
+
+  <script>
+    const questions = [
+      
+        {
+role:"Introduction",
+difficulty:"Easy",
+question:"Good morning. Please introduce yourself in one minute.",
+ keywords: ["name", "background", "experience", "skills", "interest"],
+followup:"Tell me about your strengths."
+},
+
+{
+role:"Strengths",
+difficulty:"Easy",
+question:"What are your biggest strengths and how will they help our company?",
+  keywords: ["strengths", "skills", "qualities", "contribution", "value"]
+},
+
+{
+role:"Weakness",
+difficulty:"Easy",
+question:"What is one weakness you are currently working to improve?",
+ keywords: ["weakness", "improvement", "learning", "growth", "self-awareness"]
+},
+
+{
+role:"Teamwork",
+difficulty:"Medium",
+question:"Tell me about a time you worked in a team and faced a challenge.",
+ keywords: ["teamwork", "challenge", "collaboration", "problem-solving", "communication"]
+},
+
+{
+role:"Conflict",
+difficulty:"Medium",
+question:"Describe a situation where you disagreed with someone and how you handled it.",
+  keywords: ["conflict", "disagreement", "resolution", "communication", "compromise"]
+},
+
+{
+role:"Pressure",
+difficulty:"Medium",
+question:"How do you handle pressure and deadlines?",
+  keywords: ["pressure", "deadlines", "stress", "time management", "prioritization"]
+},
+
+{
+role:"Company",
+difficulty:"Hard",
+question:"Why do you want to work at our company?",
+  keywords: ["company", "values", "culture", "mission", "fit"]
+},
+
+{
+role:"Leadership",
+difficulty:"Hard",
+question:"Describe a situation where you took leadership.",
+  keywords: ["leadership", "initiative", "decision-making", "team", "responsibility"]
+
+},
+
+{
+role:"Future",
+difficulty:"Hard",
+question:"Where do you see yourself in five years?",
+  keywords: ["future", "career goals", "growth", "development", "ambition"]
+},
+
+{
+role:"Closing",
+difficulty:"Hard",
+question:"Do you have any questions for me?",
+ keywords: ["questions", "company", "role", "team", "culture"]
+},
+
+      {  topic: "Java Basics",
+        difficulty: "Easy",
+        question: "Please introduce yourself briefly and tell me why you are interested in Java development.",
+        keywords: ["java", "project", "skill", "learn", "development"]
+      },
+      {
+        topic: "Java Basics",
+        difficulty: "Easy",
+        question: "What is Java, and why is it called platform independent?",
+        keywords: ["jvm", "bytecode", "platform", "independent"]
+      },
+      {
+        topic: "OOP",
+        difficulty: "Easy",
+        question: "Can you explain the four main principles of object-oriented programming?",
+        keywords: ["encapsulation", "inheritance", "polymorphism", "abstraction"]
+      },
+      {
+        topic: "Core Java",
+        difficulty: "Medium",
+        question: "What is the difference between method overloading and method overriding?",
+        keywords: ["compile", "runtime", "same name", "inheritance", "parameters"]
+      },
+      {
+        topic: "Collections",
+        difficulty: "Medium",
+        question: "What is the difference between ArrayList and LinkedList?",
+        keywords: ["arraylist", "linkedlist", "insert", "search", "memory"]
+      },
+      {
+        topic: "Exceptions",
+        difficulty: "Medium",
+        question: "What is the difference between checked and unchecked exceptions in Java?",
+        keywords: ["checked", "unchecked", "compile", "runtime", "exception"]
+      },
+      {
+        topic: "Threads",
+        difficulty: "Hard",
+        question: "How can you create a thread in Java, and what is the difference between start() and run()?",
+        keywords: ["thread", "runnable", "start", "run", "separate"]
+      },
+      {
+        topic: "JVM",
+        difficulty: "Hard",
+        question: "Explain the role of JVM memory areas such as heap and stack.",
+        keywords: ["heap", "stack", "object", "method", "memory"]
+      },
+      {
+        topic: "Spring",
+        difficulty: "Hard",
+        question: "What is dependency injection, and why is it useful in Spring?",
+        keywords: ["dependency", "injection", "spring", "loose", "coupling"]
+      },
+      {
+        topic: "Scenario",
+        difficulty: "Hard",
+        question: "If your Java application is slow in production, how would you investigate and improve performance?",
+        keywords: ["logs", "profiling", "database", "memory", "thread", "optimize"]
+      }
+      
+    ];
+
+    let currentIndex = -1;
+    let submittedAnswers = 0;
+    let technicalScore = 0;
+    let timerSeconds = 30 * 60;
+    let timerId = null;
+
+    const timerBadge = document.getElementById("timerBadge");
+    const questionBadge = document.getElementById("questionBadge");
+    const interviewerStatus = document.getElementById("interviewerStatus");
+    const progressValue = document.getElementById("progressValue");
+    const difficultyValue = document.getElementById("difficultyValue");
+    const questionValue = document.getElementById("questionValue");
+    const topicValue = document.getElementById("topicValue");
+    const questionStatus = document.getElementById("questionStatus");
+    const questionText = document.getElementById("questionText");
+    const timerValue = document.getElementById("timerValue");
+    const currentQuestionValue = document.getElementById("currentQuestionValue");
+    const correctnessValue = document.getElementById("correctnessValue");
+    const feedbackStatus = document.getElementById("feedbackStatus");
+    const answerInput = document.getElementById("answerInput");
+    const feedbackText = document.getElementById("feedbackText");
+    const startButton = document.getElementById("startButton");
+    const speakButton = document.getElementById("speakButton");
+    const micButton = document.getElementById("micButton");
+    const stopMicButton = document.getElementById("stopMicButton");
+    const submitButton = document.getElementById("submitButton");
+    const nextButton = document.getElementById("nextButton");
+    const speechSupported = "speechSynthesis" in window && "SpeechSynthesisUtterance" in window;
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const micSupported = Boolean(SpeechRecognition);
+    let currentSpeechText = "";
+    let recognition = null;
+    let isListening = false;
+
+    function speak(text) {
+      currentSpeechText = text;
+
+      if (!speechSupported) {
+        feedbackText.textContent = "Speech is not supported in this browser. The question is still shown as text.";
+        return;
+      }
+
+      window.speechSynthesis.cancel();
+
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = "en-IN";
+      utterance.rate = 0.9;
+      utterance.pitch = 1;
+      utterance.volume = 1;
+
+      const voices = window.speechSynthesis.getVoices();
+      const preferredVoice = voices.find((voice) =>
+        voice.lang.toLowerCase().startsWith("en") &&
+        /female|zira|susan|maya|google uk english female/i.test(voice.name)
+      );
+
+      if (preferredVoice) {
+        utterance.voice = preferredVoice;
+      }
+
+      window.speechSynthesis.speak(utterance);
+    }
+
+    function setupMic() {
+      if (!micSupported || recognition) return;
+
+      recognition = new SpeechRecognition();
+      recognition.lang = "en-IN";
+      recognition.continuous = true;
+      recognition.interimResults = true;
+
+      recognition.onstart = () => {
+        isListening = true;
+        micButton.disabled = true;
+        stopMicButton.disabled = false;
+        feedbackStatus.textContent = "Listening";
+        feedbackText.textContent = "Listening... please answer clearly.";
+      };
+
+      recognition.onresult = (event) => {
+        let finalTranscript = "";
+        let interimTranscript = "";
+
+        for (let i = event.resultIndex; i < event.results.length; i += 1) {
+          const transcript = event.results[i][0].transcript;
+
+          if (event.results[i].isFinal) {
+            finalTranscript += transcript + " ";
+          } else {
+            interimTranscript += transcript;
+          }
+        }
+
+        if (finalTranscript) {
+          answerInput.value = `${answerInput.value} ${finalTranscript}`.replace(/\s+/g, " ").trim();
+        }
+
+        if (interimTranscript) {
+          answerInput.placeholder = interimTranscript;
+        }
+      };
+
+      recognition.onerror = (event) => {
+        feedbackStatus.textContent = "Mic issue";
+        feedbackText.textContent = `Microphone error: ${event.error}. You can still type your answer.`;
+        stopMic();
+      };
+
+      recognition.onend = () => {
+        isListening = false;
+        answerInput.placeholder = "Type your answer here or use the microphone.";
+
+        if (!answerInput.disabled) {
+          micButton.disabled = false;
+        }
+
+        stopMicButton.disabled = true;
+
+        if (feedbackStatus.textContent === "Listening") {
+          feedbackStatus.textContent = "Waiting for answer";
+          feedbackText.textContent = "Mic stopped. You can edit your answer or submit it.";
+        }
+      };
+    }
+
+    function startMic() {
+      if (!micSupported) {
+        feedbackText.textContent = "Speech-to-text is not supported in this browser. Please use Chrome or Edge, or type your answer.";
+        return;
+      }
+
+      if (answerInput.disabled || isListening) return;
+
+      setupMic();
+      recognition.start();
+    }
+
+    function stopMic() {
+      if (recognition && isListening) {
+        recognition.stop();
+      }
+    }
+
+    function formatTime(totalSeconds) {
+      const minutes = String(Math.floor(totalSeconds / 60)).padStart(2, "0");
+      const seconds = String(totalSeconds % 60).padStart(2, "0");
+      return `${minutes}:${seconds}`;
+    }
+
+    function startTimer() {
+      if (timerId) return;
+
+      timerId = setInterval(() => {
+        timerSeconds -= 1;
+        timerValue.textContent = formatTime(timerSeconds);
+        timerBadge.textContent = `Timer ${formatTime(timerSeconds)}`;
+
+        if (timerSeconds <= 0) {
+          clearInterval(timerId);
+          endInterview();
+        }
+      }, 1000);
+    }
+
+    function showQuestion(index) {
+      const item = questions[index];
+      currentIndex = index;
+
+      topicValue.textContent = item.topic;
+      difficultyValue.textContent = item.difficulty;
+      questionText.textContent = item.question;
+      questionStatus.textContent = "Answer required";
+      questionValue.textContent = `Question ${index + 1}/10`;
+      questionBadge.textContent = `Question ${index + 1}/10`;
+      currentQuestionValue.textContent = `${index + 1} / 10`;
+      interviewerStatus.textContent = "Interview in progress";
+      feedbackStatus.textContent = "Waiting for answer";
+      correctnessValue.textContent = "-";
+      feedbackText.textContent = "";
+      answerInput.value = "";
+      answerInput.disabled = false;
+      submitButton.disabled = false;
+      nextButton.disabled = true;
+      startButton.disabled = true;
+      speakButton.disabled = false;
+      micButton.disabled = !micSupported;
+      stopMicButton.disabled = true;
+      answerInput.placeholder = "Type your answer here or use the microphone.";
+      answerInput.focus();
+    }
+
+    function evaluateAnswer() {
+      const item = questions[currentIndex];
+      const answer = answerInput.value.trim().toLowerCase();
+
+      if (!answer) {
+        feedbackText.textContent = "Please answer the question before submitting.";
+        return;
+      }
+
+      const matchedKeywords = item.keywords.filter((keyword) => answer.includes(keyword));
+      const isGood = matchedKeywords.length >= Math.min(2, item.keywords.length);
+      const isPartial = matchedKeywords.length === 1;
+
+      submittedAnswers += 1;
+      technicalScore += isGood ? 1 : isPartial ? 0.5 : 0;
+
+      correctnessValue.textContent = isGood ? "Good" : isPartial ? "Partial" : "Needs work";
+      feedbackStatus.textContent = "Feedback given";
+
+      if (isGood) {
+        feedbackText.textContent = "Good answer. You covered the key idea clearly. Try to add one short example to make it stronger.";
+      } else if (isPartial) {
+        feedbackText.textContent = "Partially correct. You are close, but include the main technical term and explain it with one simple sentence.";
+      } else {
+        feedbackText.textContent = "This needs improvement. Think about the core concept first, then answer with definition, reason, and example.";
+      }
+
+      progressValue.textContent = `${Math.round(((currentIndex + 1) / questions.length) * 100)}%`;
+      questionStatus.textContent = "Answer submitted";
+      answerInput.disabled = true;
+      stopMic();
+      micButton.disabled = true;
+      stopMicButton.disabled = true;
+      submitButton.disabled = true;
+      nextButton.disabled = false;
+
+      if (currentIndex === questions.length - 1) {
+        nextButton.textContent = "Finish Interview";
+      }
+    }
+    function recruiterReaction(score){
+
+if(score>=8){
+
+speak("Excellent answer. Very professional.");
+
+}
+
+else if(score>=5){
+
+speak("Good answer. Can you elaborate a little more?");
+
+}
+
+else{
+
+speak("I understand. Please try to provide more details.");
+
+}
+
+}
+
+    function endInterview() {
+      const score = Math.round((technicalScore / questions.length) * 10);
+      const communicationScore = calculateCommunicationScore();
+      const confidence = score >= 8 ? "High" : score >= 5 ? "Moderate" : "Needs improvement";
+
+      interviewerStatus.textContent = "Interview completed";
+      questionStatus.textContent = "Completed";
+      feedbackStatus.textContent = "Final feedback";
+      answerInput.disabled = true;
+      stopMic();
+      micButton.disabled = true;
+      stopMicButton.disabled = true;
+      submitButton.disabled = true;
+      nextButton.disabled = true;
+      speakButton.disabled = true;
+
+      questionText.innerHTML = `
+        <strong>Final Feedback</strong><br>
+        Communication Score: ${communicationScore}/10<br>
+        Technical Score: ${score}/10<br>
+        Suggestions: Use structured answers, include correct Java terms, and support answers with short examples.<br>
+        Confidence Level: ${confidence}
+      `;
+    }
+
+    function calculateCommunicationScore() {
+      const words = answerInput.value.trim().split(/\s+/).filter(Boolean).length;
+      if (submittedAnswers === 0) return 1;
+      if (words >= 25) return 8;
+      if (words >= 12) return 6;
+      return 4;
+    }
+
+    startButton.addEventListener("click", () => {
+      startTimer();
+      showQuestion(0);
+speak(`
+Good morning.
+
+My name is Sarah Wilson and I will be conducting your interview today.
+
+Please stay relaxed and answer naturally.
+
+Let's begin.
+`);
+    });
+
+    speakButton.addEventListener("click", () => {
+      if (currentSpeechText) {
+        speak(currentSpeechText);
+        return;
+      }
+
+      if (currentIndex >= 0) {
+        speak(`Question ${currentIndex + 1}. ${questions[currentIndex].question}`);
+      }
+    });
+
+    micButton.addEventListener("click", startMic);
+    stopMicButton.addEventListener("click", stopMic);
+
+    submitButton.addEventListener("click", evaluateAnswer);
+
+    nextButton.addEventListener("click", () => {
+      if (currentIndex + 1 >= questions.length) {
+        endInterview();
+        return;
+      }
+
+      showQuestion(currentIndex + 1);
+      speak(`Question ${currentIndex + 1}. ${questions[currentIndex].question}`);
+    });
+  </script>
+</body>
+</html>

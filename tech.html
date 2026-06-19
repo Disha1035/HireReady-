@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Mock Interview Platform</title>
+  <style>
+    :root {
+      --bg: #070b16;
+      --panel: #111827;
+      --panel-2: #151d31;
+      --line: #263149;
+      --text: #eef4ff;
+      --muted: #9fb0d3;
+      --blue: #4d8dff;
+      --violet: #7867ff;
+      --green: #22c55e;
+      --red: #ef4444;
+      --orange: #f97316;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Inter, Segoe UI, Arial, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top left, rgba(77, 141, 255, 0.2), transparent 36%),
+        radial-gradient(circle at bottom right, rgba(120, 103, 255, 0.16), transparent 34%),
+        var(--bg);
+      color: var(--text);
+      padding: 22px;
+    }
+
+    button,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      border-radius: 16px;
+      color: #fff;
+      font-weight: 800;
+      padding: 15px 20px;
+      cursor: pointer;
+      background: #20283b;
+      border: 1px solid #303b56;
+      transition: transform 0.18s ease, border-color 0.18s ease, filter 0.18s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      border-color: #536485;
+      filter: brightness(1.08);
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 0.55;
+      transform: none;
+    }
+
+    .primary {
+      background: linear-gradient(135deg, var(--violet), var(--blue));
+      border-color: transparent;
+    }
+
+    .danger {
+      background: linear-gradient(135deg, var(--orange), var(--red));
+      border-color: transparent;
+    }
+
+    .success {
+      background: linear-gradient(135deg, #13a85a, #34d399);
+      border-color: transparent;
+    }
+
+    .app-shell {
+      width: min(1500px, 100%);
+      margin: 0 auto;
+      border: 1px solid rgba(148, 163, 184, 0.22);
+      border-radius: 28px;
+      overflow: hidden;
+      background: rgba(9, 14, 28, 0.92);
+      box-shadow: 0 24px 90px rgba(0, 0, 0, 0.42);
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 20px 28px;
+      background: rgba(13, 19, 37, 0.94);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, #38bdf8, #7867ff);
+      font-weight: 900;
+      box-shadow: 0 12px 32px rgba(77, 141, 255, 0.32);
+    }
+
+    .brand h1 {
+      font-size: 22px;
+      letter-spacing: 0;
+    }
+
+    .brand p,
+    .subtle {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .setup {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    select {
+      min-width: 220px;
+      height: 48px;
+      color: var(--text);
+      background: #141c2e;
+      border: 1px solid #303b56;
+      border-radius: 14px;
+      padding: 0 14px;
+      outline: none;
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: minmax(0, 1.6fr) minmax(380px, 0.9fr);
+      min-height: calc(100vh - 112px);
+    }
+
+    .left,
+    .right {
+      padding: 28px 34px;
+    }
+
+    .left {
+      border-right: 1px solid var(--line);
+    }
+
+    .interviewer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 26px;
+    }
+
+    .person {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .avatar {
+      width: 82px;
+      height: 82px;
+      border-radius: 26px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(145deg, #75a7ff, #2fc7ec);
+      box-shadow: inset 0 -16px 28px rgba(10, 22, 43, 0.25), 0 18px 40px rgba(77, 141, 255, 0.26);
+      position: relative;
+    }
+
+    .avatar::before,
+    .avatar::after {
+      content: "";
+      position: absolute;
+      top: 22px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #eef4ff;
+    }
+
+    .avatar::before {
+      left: 24px;
+    }
+
+    .avatar::after {
+      right: 24px;
+    }
+
+    .mouth {
+      width: 46px;
+      height: 12px;
+      border-radius: 99px;
+      background: #eaf6ff;
+      margin-top: 28px;
+    }
+
+    .person h2 {
+      font-size: 25px;
+      margin-bottom: 6px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: #cbd8f6;
+      background: rgba(120, 103, 255, 0.14);
+      border: 1px solid rgba(120, 103, 255, 0.36);
+      border-radius: 999px;
+      padding: 9px 13px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 18px var(--green);
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .stat,
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: linear-gradient(180deg, rgba(22, 31, 52, 0.96), rgba(17, 24, 39, 0.96));
+    }
+
+    .stat {
+      padding: 20px;
+      min-height: 108px;
+    }
+
+    .stat span {
+      display: block;
+      color: var(--muted);
+      margin-bottom: 12px;
+      font-size: 15px;
+    }
+
+    .stat strong {
+      font-size: 25px;
+    }
+
+    .intro {
+      border-left: 5px solid var(--violet);
+      padding: 24px 28px;
+      margin-bottom: 24px;
+      line-height: 1.7;
+      font-size: 21px;
+    }
+
+    .question-card {
+      padding: 28px;
+      min-height: 248px;
+      margin-bottom: 24px;
+    }
+
+    .question-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      color: #d8e4ff;
+      font-weight: 800;
+      margin-bottom: 30px;
+    }
+
+    .question-text {
+      font-size: 28px;
+      line-height: 1.55;
+    }
+
+    .feedback-card {
+      padding: 24px 28px;
+      min-height: 134px;
+    }
+
+    .feedback-card h3,
+    .side-card h3 {
+      font-size: 22px;
+      margin-bottom: 16px;
+    }
+
+    .feedback-card p {
+      color: #d8e4ff;
+      font-size: 20px;
+      line-height: 1.6;
+    }
+
+    .right {
+      background: rgba(8, 13, 26, 0.82);
+    }
+
+    .side-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .mini {
+      padding: 20px;
+      min-height: 114px;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: #141b2d;
+    }
+
+    .mini span {
+      display: block;
+      color: var(--muted);
+      margin-bottom: 14px;
+      font-size: 15px;
+    }
+
+    .mini strong {
+      font-size: 24px;
+    }
+
+    .answer-area {
+      width: 100%;
+      min-height: 280px;
+      color: var(--text);
+      background: #070b16;
+      border: 1px solid #202a42;
+      border-radius: 24px;
+      padding: 24px;
+      resize: vertical;
+      outline: none;
+      font-size: 18px;
+      line-height: 1.55;
+    }
+
+    .answer-area:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 4px rgba(77, 141, 255, 0.14);
+    }
+
+    .mic-row,
+    .actions {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-top: 16px;
+    }
+
+    .actions {
+      grid-template-columns: 1fr 1fr;
+      margin-top: 18px;
+    }
+
+    .hint {
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.45;
+      margin-top: 14px;
+    }
+
+    .recording {
+      color: #fecaca;
+      font-weight: 800;
+    }
+
+    .result {
+      display: none;
+      padding: 28px 34px 34px;
+      border-top: 1px solid var(--line);
+      background: #0b1120;
+    }
+
+    .result.active {
+      display: block;
+    }
+
+    .score-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .score {
+      padding: 22px;
+      border-radius: 22px;
+      background: #141b2d;
+      border: 1px solid var(--line);
+    }
+
+    .score span {
+      display: block;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .score strong {
+      font-size: 34px;
+    }
+
+    ul {
+      padding-left: 22px;
+      color: #d8e4ff;
+      line-height: 1.8;
+      font-size: 17px;
+    }
+
+    @media (max-width: 1050px) {
+      .workspace,
+      .stats,
+      .side-grid,
+      .score-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .left {
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .interviewer,
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+
+    @media (max-width: 650px) {
+      body {
+        padding: 10px;
+      }
+
+      .left,
+      .right,
+      .result,
+      .topbar {
+        padding: 18px;
+      }
+
+      .person {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .question-text {
+        font-size: 22px;
+      }
+
+      .intro,
+      .feedback-card p {
+        font-size: 17px;
+      }
+
+      .mic-row,
+      .actions {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo">AI</div>
+        <div>
+          <h1>AI Mock Interview Platform</h1>
+        </div>
+      </div>
+
+      <div class="setup">
+        <select id="domainSelect" aria-label="Choose interview domain">
+          <option value="java">Java</option>
+          <option value="software">Software Development</option>
+          <option value="web">Web Development</option>
+          <option value="data">Data Science</option>
+          <option value="cybersecurity">Cybersecurity</option>
+        </select>
+        <button class="success" id="startBtn">Start Interview</button>
+      </div>
+    </header>
+
+    <section class="workspace">
+      <main class="left">
+        <div class="interviewer">
+          <div class="person">
+            <div class="avatar" aria-hidden="true"><div class="mouth"></div></div>
+            <div>
+              <h2>AI Interviewer - Maya</h2>
+              <p class="subtle" id="interviewerStatus">Waiting to start</p>
+            </div>
+          </div>
+          <div class="pill"><span class="dot"></span><span id="liveState">Ready</span></div>
+        </div>
+
+        <div class="stats">
+          <div class="stat"><span>Domain</span><strong id="domainLabel">Java</strong></div>
+          <div class="stat"><span>Progress</span><strong id="progressPercent">0%</strong></div>
+          <div class="stat"><span>Difficulty</span><strong id="difficultyLabel">Easy</strong></div>
+          <div class="stat"><span>Question</span><strong id="questionCount">1/12</strong></div>
+        </div>
+
+        <div class="card intro" id="introText">
+          Welcome to the Java AI Mock Interview. I will ask question , just like a real interviewer. Answer out loud or type, then submit for feedback.
+        </div>
+
+        <article class="card question-card">
+          <div class="question-head">
+            <span id="topicLabel">Java Basics</span>
+            <span id="questionStatus">Waiting to start</span>
+          </div>
+          <p class="question-text" id="questionText">Select your domain and click Start Interview.</p>
+        </article>
+
+        <article class="card feedback-card">
+          <h3>AI Feedback</h3>
+          <p id="feedbackText">Answer like you are in a real interview. Be clear, direct, and technical.</p>
+        </article>
+      </main>
+
+      <aside class="right">
+        <div class="side-grid">
+          <div class="mini"><span>Timer</span><strong id="timerText">30:00</strong></div>
+          <div class="mini"><span>Current Question</span><strong id="sideQuestionCount">1/12</strong></div>
+          <div class="mini"><span>Correctness</span><strong id="correctnessText">-</strong></div>
+          <div class="mini"><span>Feedback Status</span><strong id="feedbackStatus">Waiting</strong></div>
+        </div>
+
+        <textarea id="answerInput" class="answer-area" placeholder="Type your answer here or use the microphone."></textarea>
+
+        <div class="mic-row">
+          <button id="micBtn">Start Mic</button>
+          <button id="stopMicBtn" class="danger" disabled>Stop Mic</button>
+          <button id="repeatBtn">Repeat Question</button>
+        </div>
+
+        <p class="hint" id="voiceHint">Use your microphone to answer out loud. The AI will speak each question.</p>
+
+        <div class="actions">
+          <button class="primary" id="submitBtn">Submit Answer</button>
+          <button id="nextBtn">Next Question</button>
+        </div>
+        <div class="actions">
+          <button class="danger" id="endBtn">End Interview</button>
+          <button id="clearBtn">Clear Answer</button>
+        </div>
+      </aside>
+    </section>
+
+    <section class="result" id="resultPanel">
+      <div class="score-grid">
+        <div class="score"><span>Communication Score</span><strong id="communicationScore">0/10</strong></div>
+        <div class="score"><span>Technical Score</span><strong id="technicalScore">0/10</strong></div>
+        <div class="score"><span>Confidence Level</span><strong id="confidenceLevel">Low</strong></div>
+      </div>
+      <div class="card feedback-card">
+        <h3>Final Interview Feedback</h3>
+        <p id="finalFeedback">Complete the interview to receive final feedback.</p>
+        <br />
+        <h3>Suggestions for Improvement</h3>
+        <ul id="suggestions"></ul>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const questionBank = {
+      java: [
+        { level: "Easy", topic: "Java Basics", question: "What is Java and why is it widely used?", keywords: ["java", "platform", "object", "write once run anywhere", "jvm"] },
+        { level: "Easy", topic: "Java Basics", question: "What are the main features of Java and why is it platform independent?", keywords: ["object", "platform", "independent", "jvm", "bytecode"] },
+        { level: "Easy", topic: "Java Basics", question: "What is the difference between JDK, JRE, and JVM?", keywords: ["jdk", "jre", "jvm", "compiler", "runtime"] },
+        { level: "Easy", topic: "OOP", question: "Explain class and object with a simple example.", keywords: ["class", "object", "blueprint", "instance", "example"] },
+        { level: "Medium", topic: "OOP", question: "What are inheritance, encapsulation, polymorphism, and abstraction?", keywords: ["inheritance", "encapsulation", "polymorphism", "abstraction"] },
+        { level: "Medium", topic: "Core Java", question: "What is the difference between method overloading and method overriding?", keywords: ["overloading", "overriding", "compile", "runtime", "signature"] },
+        { level: "Medium", topic: "Collections", question: "How are ArrayList and LinkedList different in Java?", keywords: ["arraylist", "linkedlist", "index", "node", "insertion"] },
+        { level: "Medium", topic: "Exceptions", question: "What is exception handling and how do try, catch, finally, and throw work?", keywords: ["exception", "try", "catch", "finally", "throw"] },
+        { level: "Hard", topic: "Memory", question: "Explain stack memory and heap memory in Java.", keywords: ["stack", "heap", "object", "reference", "memory"] },
+        { level: "Hard", topic: "Concurrency", question: "What is multithreading, and how can race conditions be avoided?", keywords: ["thread", "multithreading", "race", "synchronized", "lock"] },
+        { level: "Hard", topic: "JVM", question: "What is garbage collection in Java, and why is it useful?", keywords: ["garbage", "collection", "memory", "unused", "heap"] },
+        { level: "Hard", topic: "Design", question: "How would you design a simple student management system in Java?", keywords: ["class", "object", "database", "crud", "design"] },
+        { level: "Hard", topic: "Practical", question: "If a Java program is slow, how would you investigate and improve performance?", keywords: ["profile", "memory", "algorithm", "database", "optimize"] }
+      ],
+      software: [
+        { level: "Easy", topic: "Basics", question: "What is the difference between a variable and a constant?", keywords: ["variable", "constant", "change", "fixed", "value"] },
+        { level: "Easy", topic: "Basics", question: "What is a function, and why do developers use functions?", keywords: ["function", "reuse", "block", "code", "return"] },
+        { level: "Medium", topic: "Data Structures", question: "Explain the difference between an array and a linked list.", keywords: ["array", "linked", "memory", "index", "node"] },
+        { level: "Medium", topic: "OOP", question: "What is object-oriented programming?", keywords: ["class", "object", "encapsulation", "inheritance", "polymorphism"] },
+        { level: "Medium", topic: "Debugging", question: "How would you debug a program that produces incorrect output?", keywords: ["debug", "test", "log", "trace", "breakpoint"] },
+        { level: "Hard", topic: "Algorithms", question: "What is time complexity, and how would you compare O(n) and O(log n)?", keywords: ["complexity", "o(n)", "o(log n)", "growth", "input"] },
+        { level: "Hard", topic: "System Design", question: "Explain how you would design a URL shortener at a high level.", keywords: ["database", "hash", "redirect", "unique", "scale"] },
+        { level: "Hard", topic: "Concurrency", question: "What are race conditions, and how can they be prevented?", keywords: ["race", "thread", "concurrency", "lock", "synchronization"] }
+      ],
+      web: [
+        { level: "Easy", topic: "Frontend", question: "What are HTML, CSS, and JavaScript used for?", keywords: ["html", "css", "javascript", "structure", "style", "behavior"] },
+        { level: "Easy", topic: "CSS", question: "What is the difference between an id and a class in CSS?", keywords: ["id", "class", "unique", "selector", "css"] },
+        { level: "Medium", topic: "CSS", question: "Explain the box model in CSS.", keywords: ["content", "padding", "border", "margin", "box"] },
+        { level: "Medium", topic: "JavaScript", question: "What is event bubbling in JavaScript?", keywords: ["event", "bubbling", "parent", "child", "propagation"] },
+        { level: "Medium", topic: "Responsive", question: "What is the purpose of responsive design?", keywords: ["responsive", "mobile", "screen", "media", "layout"] },
+        { level: "Hard", topic: "Browser", question: "How does the browser render a web page after receiving HTML, CSS, and JavaScript?", keywords: ["dom", "cssom", "render", "layout", "paint"] },
+        { level: "Hard", topic: "Performance", question: "How would you improve performance on a slow web page?", keywords: ["performance", "lazy", "cache", "bundle", "image"] },
+        { level: "Hard", topic: "Auth", question: "Explain how authentication usually works in a web application.", keywords: ["authentication", "session", "token", "cookie", "jwt"] }
+      ],
+      data: [
+        { level: "Easy", topic: "Data", question: "What is the difference between structured and unstructured data?", keywords: ["structured", "unstructured", "table", "text", "image"] },
+        { level: "Easy", topic: "Data Quality", question: "What is data cleaning?", keywords: ["cleaning", "missing", "duplicate", "format", "quality"] },
+        { level: "Medium", topic: "ML", question: "What is the difference between supervised and unsupervised learning?", keywords: ["supervised", "unsupervised", "label", "classification", "clustering"] },
+        { level: "Medium", topic: "ML", question: "Explain overfitting in machine learning.", keywords: ["overfitting", "training", "test", "generalize", "model"] },
+        { level: "Medium", topic: "Metrics", question: "What metrics would you use to evaluate a classification model?", keywords: ["accuracy", "precision", "recall", "f1", "confusion"] },
+        { level: "Hard", topic: "ML", question: "How would you handle an imbalanced dataset?", keywords: ["imbalanced", "resampling", "smote", "class", "recall"] },
+        { level: "Hard", topic: "ML", question: "Explain the bias-variance tradeoff.", keywords: ["bias", "variance", "underfit", "overfit", "generalization"] },
+        { level: "Hard", topic: "Pipeline", question: "How would you design a data pipeline for daily sales reporting?", keywords: ["pipeline", "extract", "transform", "load", "schedule"] }
+      ],
+      cybersecurity: [
+        { level: "Easy", topic: "Security Basics", question: "What is the difference between authentication and authorization?", keywords: ["authentication", "authorization", "identity", "permission", "access"] },
+        { level: "Easy", topic: "Security Basics", question: "What is a strong password?", keywords: ["password", "length", "unique", "complex", "manager"] },
+        { level: "Medium", topic: "Threats", question: "What is phishing, and how can users avoid it?", keywords: ["phishing", "email", "link", "verify", "social"] },
+        { level: "Medium", topic: "Access", question: "Explain the principle of least privilege.", keywords: ["least", "privilege", "minimum", "permission", "access"] },
+        { level: "Medium", topic: "Web Security", question: "What is SQL injection?", keywords: ["sql", "injection", "query", "input", "prepared"] },
+        { level: "Hard", topic: "API Security", question: "How would you secure a public login API?", keywords: ["rate", "hash", "mfa", "token", "tls"] },
+        { level: "Hard", topic: "Encryption", question: "What is the difference between symmetric and asymmetric encryption?", keywords: ["symmetric", "asymmetric", "key", "public", "private"] },
+        { level: "Hard", topic: "Incident Response", question: "How would you respond to a suspected data breach?", keywords: ["contain", "investigate", "notify", "logs", "recover"] }
+      ]
+    };
+
+    const labels = {
+      java: "Java",
+      software: "Software Development",
+      web: "Web Development",
+      data: "Data Science",
+      cybersecurity: "Cybersecurity"
+    };
+
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const domainSelect = document.getElementById("domainSelect");
+    const startBtn = document.getElementById("startBtn");
+    const domainLabel = document.getElementById("domainLabel");
+    const progressPercent = document.getElementById("progressPercent");
+    const difficultyLabel = document.getElementById("difficultyLabel");
+    const questionCount = document.getElementById("questionCount");
+    const sideQuestionCount = document.getElementById("sideQuestionCount");
+    const topicLabel = document.getElementById("topicLabel");
+    const questionStatus = document.getElementById("questionStatus");
+    const questionText = document.getElementById("questionText");
+    const answerInput = document.getElementById("answerInput");
+    const feedbackText = document.getElementById("feedbackText");
+    const feedbackStatus = document.getElementById("feedbackStatus");
+    const correctnessText = document.getElementById("correctnessText");
+    const interviewerStatus = document.getElementById("interviewerStatus");
+    const liveState = document.getElementById("liveState");
+    const timerText = document.getElementById("timerText");
+    const micBtn = document.getElementById("micBtn");
+    const stopMicBtn = document.getElementById("stopMicBtn");
+    const repeatBtn = document.getElementById("repeatBtn");
+    const submitBtn = document.getElementById("submitBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const endBtn = document.getElementById("endBtn");
+    const clearBtn = document.getElementById("clearBtn");
+    const voiceHint = document.getElementById("voiceHint");
+    const resultPanel = document.getElementById("resultPanel");
+    const introText = document.getElementById("introText");
+
+    let questions = questionBank.java;
+    let currentIndex = 0;
+    let answers = [];
+    let recognition = null;
+    let finalTranscript = "";
+    let isRecording = false;
+    let timer = null;
+    let secondsLeft = 30 * 60;
+
+    startBtn.addEventListener("click", startInterview);
+    micBtn.addEventListener("click", startMic);
+    stopMicBtn.addEventListener("click", stopMic);
+    repeatBtn.addEventListener("click", speakQuestion);
+    submitBtn.addEventListener("click", submitAnswer);
+    nextBtn.addEventListener("click", nextQuestion);
+    endBtn.addEventListener("click", finishInterview);
+    clearBtn.addEventListener("click", () => {
+      answerInput.value = "";
+      finalTranscript = "";
+      answerInput.focus();
+    });
+    domainSelect.addEventListener("change", updateDomainPreview);
+
+    updateDomainPreview();
+    setButtons(false);
+
+    function updateDomainPreview() {
+      const domain = labels[domainSelect.value];
+      questions = questionBank[domainSelect.value];
+      domainLabel.textContent = domain;
+      introText.textContent = `Welcome to the ${domain} AI Mock Interview. I will ask one question at a time, just like a real interviewer. Answer out loud or type, then submit for feedback.`;
+      questionCount.textContent = `1/${questions.length}`;
+      sideQuestionCount.textContent = `1/${questions.length}`;
+    }
+
+    function startInterview() {
+      questions = questionBank[domainSelect.value];
+      currentIndex = 0;
+      answers = [];
+      secondsLeft = 30 * 60;
+      resultPanel.classList.remove("active");
+      setupRecognition();
+      startTimer();
+      setButtons(true);
+      renderQuestion();
+    }
+
+    function renderQuestion() {
+      const current = questions[currentIndex];
+      const progress = Math.round((currentIndex / questions.length) * 100);
+      domainLabel.textContent = labels[domainSelect.value];
+      progressPercent.textContent = `${progress}%`;
+      difficultyLabel.textContent = current.level;
+      questionCount.textContent = `${currentIndex + 1}/${questions.length}`;
+      sideQuestionCount.textContent = `${currentIndex + 1}/${questions.length}`;
+      topicLabel.textContent = current.topic;
+      questionText.textContent = current.question;
+      questionStatus.textContent = "Waiting for answer";
+      feedbackStatus.textContent = "Waiting";
+      correctnessText.textContent = "-";
+      feedbackText.textContent = "Answer like you are in a real interview. Be clear, direct, and technical.";
+      interviewerStatus.textContent = "Asking question";
+      liveState.textContent = "Live Interview";
+      answerInput.value = "";
+      finalTranscript = "";
+      speakQuestion();
+    }
+
+    function setupRecognition() {
+      if (!SpeechRecognition) {
+        micBtn.disabled = true;
+        stopMicBtn.disabled = true;
+        voiceHint.textContent = "Mic transcription is not supported in this browser. You can still type your answer.";
+        return;
+      }
+
+      recognition = new SpeechRecognition();
+      recognition.lang = "en-US";
+      recognition.continuous = true;
+      recognition.interimResults = true;
+
+      recognition.onresult = (event) => {
+        let interim = "";
+        for (let i = event.resultIndex; i < event.results.length; i += 1) {
+          const transcript = event.results[i][0].transcript;
+          if (event.results[i].isFinal) {
+            finalTranscript += `${transcript} `;
+          } else {
+            interim += transcript;
+          }
+        }
+        answerInput.value = `${finalTranscript}${interim}`.trim();
+      };
+
+      recognition.onerror = (event) => {
+        voiceHint.textContent = `Microphone issue: ${event.error}. You can type your answer instead.`;
+        resetMicButtons();
+      };
+
+      recognition.onend = () => {
+        if (isRecording) {
+          resetMicButtons();
+          voiceHint.textContent = "Mic stopped. Review the transcript and submit your answer.";
+        }
+      };
+    }
+
+    function speakQuestion() {
+      if (!questions[currentIndex] || !window.speechSynthesis) return;
+      window.speechSynthesis.cancel();
+      const text = `Question ${currentIndex + 1}. ${questions[currentIndex].question}`;
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = "en-US";
+      utterance.rate = 0.9;
+      utterance.pitch = 1;
+      utterance.onstart = () => {
+        interviewerStatus.textContent = "Speaking";
+        questionStatus.textContent = "AI speaking";
+      };
+      utterance.onend = () => {
+        interviewerStatus.textContent = "Waiting for answer";
+        questionStatus.textContent = "Waiting for answer";
+      };
+      window.speechSynthesis.speak(utterance);
+    }
+
+    function startMic() {
+      if (!recognition) {
+        voiceHint.textContent = "Speech recognition is unavailable. Please type your answer.";
+        answerInput.focus();
+        return;
+      }
+      window.speechSynthesis.cancel();
+      finalTranscript = answerInput.value.trim() ? `${answerInput.value.trim()} ` : "";
+      isRecording = true;
+      micBtn.disabled = true;
+      stopMicBtn.disabled = false;
+      voiceHint.textContent = "Recording... speak naturally, like a real interview.";
+      voiceHint.classList.add("recording");
+      interviewerStatus.textContent = "Listening";
+      liveState.textContent = "Listening";
+      recognition.start();
+    }
+
+    function stopMic() {
+      if (!recognition || !isRecording) return;
+      isRecording = false;
+      recognition.stop();
+      resetMicButtons();
+      voiceHint.textContent = "Mic stopped. Review the transcript and submit your answer.";
+    }
+
+    function resetMicButtons() {
+      isRecording = false;
+      micBtn.disabled = false;
+      stopMicBtn.disabled = true;
+      voiceHint.classList.remove("recording");
+      interviewerStatus.textContent = "Waiting for answer";
+      liveState.textContent = "Live Interview";
+    }
+
+    function submitAnswer() {
+      const answer = answerInput.value.trim();
+      if (!answer) {
+        feedbackText.textContent = "Please speak or type an answer before submitting.";
+        feedbackStatus.textContent = "Need answer";
+        speakFeedback("Please speak or type an answer before submitting.");
+        return;
+      }
+
+      stopMic();
+      const current = questions[currentIndex];
+      const score = evaluateAnswer(answer, current.keywords);
+      const feedback = buildFeedback(score, answer);
+      answers[currentIndex] = {
+        score,
+        answer,
+        words: answer.split(/\s+/).length
+      };
+
+      correctnessText.textContent = `${score}/10`;
+      feedbackStatus.textContent = "Completed";
+      questionStatus.textContent = "Answered";
+      interviewerStatus.textContent = "Feedback ready";
+      feedbackText.textContent = feedback;
+      speakFeedback(feedback);
+    }
+
+    function evaluateAnswer(answer, keywords) {
+      const normalized = answer.toLowerCase();
+      const matched = keywords.filter((keyword) => normalized.includes(keyword.toLowerCase()));
+      const keywordScore = matched.length / keywords.length;
+      const wordScore = Math.min(answer.split(/\s+/).length / 45, 1);
+      return Math.round((keywordScore * 7 + wordScore * 3) * 10) / 10;
+    }
+
+    function buildFeedback(score, answer) {
+      if (score >= 8) return "Good answer. You covered the main concept clearly and used relevant technical keywords.";
+      if (score >= 5.5) return "Fair answer. Add one clear example and explain the reason behind your point.";
+      if (answer.split(/\s+/).length < 14) return "Your answer is too short. Give a definition, one key detail, and a small example.";
+      return "Partially correct. Start with the core concept first, then add supporting technical details.";
+    }
+
+    function speakFeedback(text) {
+      if (!window.speechSynthesis) return;
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = "en-US";
+      utterance.rate = 0.94;
+      window.speechSynthesis.speak(utterance);
+    }
+
+    function nextQuestion() {
+      if (currentIndex < questions.length - 1) {
+        currentIndex += 1;
+        renderQuestion();
+      } else {
+        finishInterview();
+      }
+    }
+
+    function finishInterview() {
+      stopMic();
+      window.speechSynthesis.cancel();
+      clearInterval(timer);
+      timer = null;
+
+      const completed = answers.filter(Boolean);
+      const technical = average(completed.map((item) => item.score));
+      const communication = average(completed.map((item) => Math.min(item.words / 45, 1) * 10));
+      const combined = (technical + communication) / 2;
+      const confidence = combined >= 8 ? "High" : combined >= 5.5 ? "Medium" : "Low";
+
+      document.getElementById("technicalScore").textContent = `${technical}/10`;
+      document.getElementById("communicationScore").textContent = `${communication}/10`;
+      document.getElementById("confidenceLevel").textContent = confidence;
+      document.getElementById("finalFeedback").textContent = finalFeedback(technical, communication, completed.length);
+
+      const suggestions = document.getElementById("suggestions");
+      suggestions.innerHTML = "";
+      getSuggestions(technical, communication, completed.length).forEach((text) => {
+        const li = document.createElement("li");
+        li.textContent = text;
+        suggestions.appendChild(li);
+      });
+
+      progressPercent.textContent = "100%";
+      interviewerStatus.textContent = "Interview completed";
+      liveState.textContent = "Completed";
+      feedbackStatus.textContent = "Final report";
+      resultPanel.classList.add("active");
+      resultPanel.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function average(values) {
+      if (!values.length) return 0;
+      return Math.round((values.reduce((sum, value) => sum + value, 0) / values.length) * 10) / 10;
+    }
+
+    function finalFeedback(technical, communication, completed) {
+      if (!completed) return "No answers were submitted. Practice by answering at least five questions.";
+      if (technical >= 8 && communication >= 8) return "Strong interview performance. Your answers were clear, structured, and technically relevant.";
+      if (technical >= 6) return "You have a reasonable technical base. Improve by giving examples and making answers more structured.";
+      return "You need more fundamentals practice. Focus on definitions, key differences, and simple real-world examples.";
+    }
+
+    function getSuggestions(technical, communication, completed) {
+      const list = [];
+      if (completed < 5) list.push("Complete at least five questions to get more reliable feedback.");
+      if (technical < 7) list.push("Revise core concepts for your selected domain and practice common interview questions.");
+      if (communication < 7) list.push("Avoid one-line answers. Use a 3-part structure: definition, explanation, example.");
+      list.push("Speak aloud during practice to improve confidence, pacing, and professional communication.");
+      return list;
+    }
+
+    function setButtons(enabled) {
+      micBtn.disabled = !enabled || !SpeechRecognition;
+      stopMicBtn.disabled = true;
+      repeatBtn.disabled = !enabled;
+      submitBtn.disabled = !enabled;
+      nextBtn.disabled = !enabled;
+      endBtn.disabled = !enabled;
+      clearBtn.disabled = !enabled;
+    }
+
+    function startTimer() {
+      clearInterval(timer);
+      renderTimer();
+      timer = setInterval(() => {
+        secondsLeft -= 1;
+        renderTimer();
+        if (secondsLeft <= 0) finishInterview();
+      }, 1000);
+    }
+
+    function renderTimer() {
+      const minutes = String(Math.max(0, Math.floor(secondsLeft / 60))).padStart(2, "0");
+      const seconds = String(Math.max(0, secondsLeft % 60)).padStart(2, "0");
+      timerText.textContent = `${minutes}:${seconds}`;
+    }
+  </script>
+</body>
+</html>
